@@ -1,0 +1,107 @@
+# Brief Schema Template
+# Copy this file to presentations/<slug>/brief.yaml and fill in all fields.
+# This is the single source of truth for all agents in the presentation workflow.
+
+meta:
+  title: ""                    # Working title of the presentation
+  slug: ""                     # URL-safe slug derived from title
+  created: ""                  # ISO date (YYYY-MM-DD)
+
+purpose: ""                    # 1-2 sentences: what is this presentation for? What outcome?
+
+audience:
+  who: ""                      # Who will be in the room?
+  knowledge_level: ""          # What do they already know about the topic?
+  care_about: ""               # What are their primary concerns/interests?
+
+key_message: ""                # The ONE thing the audience should remember
+
+length:
+  slides: 0                   # Target number of slides
+  minutes: 0                  # Target presentation duration in minutes
+
+framework: ""                  # Selected storytelling framework ID
+                               # Options: situation-complication-resolution, problem-solution-benefit,
+                               #          burning-platform, heros-journey, what-so-what-now-what, star
+framework_rationale: ""        # Why this framework fits the context
+
+# Presentation context — how and where this will be delivered
+delivery:
+  format: "virtual"            # Options: in-person, virtual, hybrid
+  slide_control: "assistant"   # Options: self, assistant, automatic
+                               # - self: presenter controls own slides
+                               # - assistant: someone else advances slides ("next slide please")
+                               # - automatic: timed slide transitions
+  handoff_to: null             # Name of next speaker if this is part of a multi-speaker session, or null
+  part_of_session: null        # Session name if this is one segment of a larger meeting, or null
+  engagement_hook: true        # Whether to include virtual engagement prompts (unmute/camera/screen check)
+  
+  # Teleprompter settings — affects manuscript formatting
+  teleprompter:
+    enabled: false             # Set to true if presenter will use a teleprompter
+    format: "phrase-per-line"  # Options: phrase-per-line, sentence-per-line, paragraph
+                               # - phrase-per-line: Break at natural speech pauses (recommended)
+                               # - sentence-per-line: One complete sentence per line
+                               # - paragraph: Traditional paragraph format (not recommended for teleprompter)
+    max_line_length: 60        # Characters per line (shorter = easier to read while presenting)
+    pause_markers: true        # Insert [PAUSE] or [BEAT] markers for dramatic effect
+    emphasis_markers: true     # Use CAPITALS or **bold** for words to stress
+
+voice:
+  tone: ""                     # Describe the desired tone (e.g., "confident, technical but accessible")
+  skill_path: null             # Path to voice/speaking style skill, or null if not provided
+
+design:
+  guide_path: ""               # REQUIRED: path to design guide skill or template .pptx
+
+image_generation:
+  enabled: false               # Set to true if banana-paper skill is provided
+  skill_path: null             # Path to banana-paper skill, or null
+  types:                       # Which image types to generate (if enabled)
+    - "hero-visuals"
+    - "concept-diagrams"
+    - "data-visualizations"
+    - "background-textures"
+    - "icons"
+
+constraints:
+  mandatory_slides: []         # List of required slide types, e.g., ["title", "agenda", "summary", "q-and-a"]
+  excluded_topics: []          # Topics to avoid mentioning
+  branding_notes: ""           # Any specific branding requirements
+
+content:
+  key_points:                  # List of key points the presentation MUST cover
+    - ""
+  references:                  # Supporting files with usage instructions
+    - path: ""                 # Path relative to presentations/<slug>/input/
+      usage: ""                # How to use this reference (e.g., "Pull Q3 figures for slide 8")
+  supporting_files: []         # Additional files provided by user
+
+  # Visual slide handling — for infographics, system diagrams, or complex visuals
+  visual_slides:               # List slides that need infographic walkthrough treatment
+    - slide_number: 0
+      visual_type: ""          # Options: infographic, system-diagram, process-flow, data-visualization
+      visual_path: ""          # Path to the image/diagram file, or null if to be designed
+      walkthrough_direction: "" # Options: bottom-up, top-down, left-to-right, center-out
+      key_areas: []            # Named areas to reference (e.g., "left side: benefits", "right side: risks")
+
+  # KPI/list explanations — if the presentation needs to explain multiple items consistently
+  list_explanations:           # Lists of items that need consistent "X is Y" definitions
+    - list_name: ""            # e.g., "5 KPIs", "Core principles", "Product features"
+      items:
+        - name: ""
+          definition: ""       # One-line definition: "[Name] is [definition]"
+      synthesis: ""            # Summary sentence tying them together: "Together, these answer..."
+
+# Change management context — fill in when introducing a new process, initiative, or way of working
+change_management:
+  is_change_initiative: false  # Set to true if this presentation introduces something new
+  what_stays_same: ""          # Explicitly state what is NOT changing (builds trust, reduces anxiety)
+                               # Example: "This is not a new process — it's the existing BMS process sharpened"
+  support_contacts:            # Who can help if people have questions or struggle
+    - name: ""
+      role: ""                 # e.g., "Portfolio Manager", "Project Lead for Platform group"
+  value_chain: ""              # The higher-order benefit chain
+                               # Example: "Better projects → better products → stronger company → more investment in people"
+  deadline_label: ""           # Clear deadline phrasing for CTAs (will be checked for consistency with slides)
+                               # Example: "by Wednesday next week" or "by end of month"

@@ -1,0 +1,79 @@
+{
+  "skill": "daily-brief",
+  "description": "Binary assertions for daily-brief output quality. Used by self-improvement loop.",
+  "test_cases": [
+    {
+      "id": "standard-weekday",
+      "prompt": "Gi meg brief for i dag",
+      "expected_output": "A complete daily briefing in Norwegian with all sections",
+      "assertions": [
+        "Output starts with 'BRIEF' followed by a date",
+        "Contains a 'KALENDER' section",
+        "Contains an 'INBOX' section with unread count in parentheses",
+        "Contains a 'TASKS' section",
+        "All times use HH:MM format (e.g. 08:00, 14:30)",
+        "Language is Norwegian (not English section headers or filler text)",
+        "Does not contain em dashes (--)",
+        "Does not contain the phrase 'Certainly' or 'Great question' or 'I'd be happy to'",
+        "Calendar events include time and title on each line",
+        "Inbox items are grouped into 'Trenger handling' and 'FYI' subsections",
+        "Overdue tasks are marked with [!] prefix",
+        "Does not contain 'Sorry' or 'I apologize'",
+        "Total output is under 60 lines",
+        "Date shown matches actual current date (verified via date command)"
+      ]
+    },
+    {
+      "id": "hva-skjer",
+      "prompt": "Hva skjer i dag?",
+      "expected_output": "Should trigger daily-brief and produce same format",
+      "assertions": [
+        "Output starts with 'BRIEF' followed by a date",
+        "Contains a 'KALENDER' section",
+        "Contains an 'INBOX' section",
+        "Contains a 'TASKS' section",
+        "Language is Norwegian",
+        "Does not contain em dashes (--)",
+        "All times use HH:MM format"
+      ]
+    },
+    {
+      "id": "partial-failure",
+      "prompt": "Gi meg brief (simulate: calendar API returns error)",
+      "expected_output": "Brief should still render with available data and note the failure",
+      "assertions": [
+        "Output starts with 'BRIEF' followed by a date",
+        "If a section has no data, it notes the failure briefly rather than omitting the section entirely",
+        "Other sections (INBOX, TASKS) are still present and populated",
+        "Does not contain a full error stacktrace",
+        "Does not contain em dashes (--)"
+      ]
+    },
+    {
+      "id": "conflict-detection",
+      "prompt": "Gi meg brief (simulate: two events overlap at 10:00-11:00)",
+      "expected_output": "Brief should flag the scheduling conflict",
+      "assertions": [
+        "Output starts with 'BRIEF' followed by a date",
+        "Contains a 'KALENDER' section",
+        "Overlapping events are flagged or noted (conflict, dobbeltbooking, or similar warning)",
+        "Does not contain em dashes (--)"
+      ]
+    },
+    {
+      "id": "reminders-section",
+      "prompt": "Gi meg brief for i dag",
+      "expected_output": "Brief includes scheduled reminders for today",
+      "assertions": [
+        "Contains a 'PAMINNELSER I DAG' or 'PAMINNELSER' section if reminders exist for today",
+        "Reminder entries include time and description",
+        "Does not contain em dashes (--)"
+      ]
+    }
+  ],
+  "scoring": {
+    "method": "binary_pass_rate",
+    "description": "Each assertion is true/false. Score = passed / total. Target: 100%."
+  },
+  "loop_instructions": "Read SKILL.md -> generate output for each test case -> check assertions -> if any fail, propose ONE change to SKILL.md -> re-run -> keep change if score improves, revert if not. Repeat until 100% or interrupted."
+}
