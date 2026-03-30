@@ -7,6 +7,10 @@ set -euo pipefail
 #   ./install.sh work       # universal + work (work machines)
 #   ./install.sh personal   # universal + personal (personal machines)
 #
+# Agent install — links skills into agent project directories
+#   ./install.sh trym       # universal + personal + trym-specific → clawd/skills/
+#   ./install.sh nova       # nova-specific → ClaudeClaw/.claude/skills/
+#
 # Local install — links skills into OneDrive "AI SKILLS" folder
 #   ./install.sh local km        # KM skills
 #   ./install.sh local hydepoint # HydePoint skills
@@ -41,11 +45,16 @@ if [[ -z "$cmd" ]]; then
     echo "    ./install.sh work       # universal + work skills"
     echo "    ./install.sh personal   # universal + personal skills"
     echo ""
+    echo "  Agent (project-specific agent installs):"
+    echo "    ./install.sh trym       # universal + personal + trym skills → clawd/skills/"
+    echo "    ./install.sh nova       # nova skills → ClaudeClaw/.claude/skills/"
+    echo ""
     echo "  Local (into AI SKILLS folder):"
     echo "    ./install.sh local km        # KM skills"
     echo "    ./install.sh local hydepoint # HydePoint skills"
     echo ""
     echo "  Global target:  ~/.claude/skills/ + ~/.copilot/skills/"
+    echo "  Agent targets:  ~/clawd/skills/, ~/ClaudeClaw/.claude/skills/"
     echo "  Local target:   $LOCAL_SKILLS_BASE/<set>/"
     exit 1
 fi
@@ -131,6 +140,22 @@ case "$cmd" in
         link_skills "$REPO_DIR/global/universal" "$CLAUDE_SKILLS_DIR" "$COPILOT_SKILLS_DIR"
         link_skills "$REPO_DIR/global/personal" "$CLAUDE_SKILLS_DIR" "$COPILOT_SKILLS_DIR"
         ;;
+    trym)
+        TRYM_SKILLS_DIR="$HOME/clawd/skills"
+        echo "Installing agent skills (Trym)"
+        echo "  -> $TRYM_SKILLS_DIR"
+        echo ""
+        link_skills "$REPO_DIR/global/universal" "$TRYM_SKILLS_DIR"
+        link_skills "$REPO_DIR/global/personal" "$TRYM_SKILLS_DIR"
+        link_skills "$REPO_DIR/agents/trym" "$TRYM_SKILLS_DIR"
+        ;;
+    nova)
+        NOVA_SKILLS_DIR="$HOME/ClaudeClaw/.claude/skills"
+        echo "Installing agent skills (Nova)"
+        echo "  -> $NOVA_SKILLS_DIR"
+        echo ""
+        link_skills "$REPO_DIR/agents/nova" "$NOVA_SKILLS_DIR"
+        ;;
     local)
         if [[ -z "$arg" ]]; then
             echo "Usage: ./install.sh local <km|hydepoint|...>"
@@ -160,7 +185,7 @@ case "$cmd" in
         ;;
     *)
         echo "Unknown command: $cmd"
-        echo "Use: work, personal, or local <folder>"
+        echo "Use: work, personal, trym, nova, or local <folder>"
         exit 1
         ;;
 esac

@@ -1,0 +1,26 @@
+{
+  "name": "Tana Inbox Processor",
+  "emoji": "📥",
+  "version": "1.0.0",
+  "description": "Intelligent inbox processing with content extraction",
+  "category": "productivity",
+  "author": "nitromini",
+  "tags": ["tana", "inbox", "productivity", "automation"],
+  "clawdbot": {
+    "triggers": [
+      "process inbox",
+      "clear inbox",
+      "tana inbox",
+      "inbox processor"
+    ]
+  },
+  "scripts": {
+    "main": "scripts/process-inbox.sh"
+  },
+  "requires": {
+    "bins": ["jq", "curl"]
+  },
+  "optional": {
+    "bins": ["yt-dlp"]
+  }
+}

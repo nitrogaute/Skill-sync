@@ -1,0 +1,119 @@
+[
+  {
+    "date": "2026-03-20",
+    "market": "US x Iran ceasefire by April 15",
+    "entry": "0.23",
+    "exit": "0.20",
+    "pnl": "-1.57",
+    "reason": "edge_evaporated",
+    "learning": "CLV negative ALL 25 snapshots from day 1. Market disagreed with thesis from start. Exit faster when CLV never turns positive."
+  },
+  {
+    "date": "2026-03-20",
+    "market": "Will Ethereum dip to 1800 in March",
+    "entry": "0.14",
+    "exit": "0.01",
+    "pnl": "-22.59",
+    "reason": "stoploss",
+    "learning": "Illiquid tail-risk markets gap through stoploss levels. Book had no bids above 0.01. For illiquid positions, exit at -20pct not -25pct."
+  },
+  {
+    "date": "2026-03-20",
+    "market": "S&P 500 5pct daily loss Q1",
+    "entry": "0.06",
+    "exit": "0.03",
+    "pnl": "-7.38",
+    "reason": "stoploss",
+    "learning": "Thin order book forced selling in 3 batches at declining prices. Stoploss fill was 50pct worse than trigger price."
+  },
+  {
+    "date": "2026-03-20",
+    "market": "Dashboard data integrity",
+    "entry": "0",
+    "exit": "0",
+    "pnl": "0",
+    "reason": "system",
+    "learning": "Ledger-based dashboard drifted from on-chain reality. Rebuilt to use ONLY on-chain data. Never trust ledger for current positions."
+  },
+  {
+    "date": "2026-03-20",
+    "market": "SYSTEM: Failed to take profits at peaks",
+    "entry": "0",
+    "exit": "0",
+    "pnl": "0",
+    "reason": "system",
+    "learning": "Were in profit twice and gave it back both times. No profit-taking rules existed. Only had loss rules. Must add trailing stops and take-profit targets."
+  },
+  {
+    "date": "2026-03-20",
+    "market": "SYSTEM: No time-based profit taking",
+    "entry": "0",
+    "exit": "0",
+    "pnl": "0",
+    "reason": "system",
+    "learning": "Held positions through peaks waiting for expiry. Time decay and mean reversion eroded gains."
+  },
+  {
+    "date": "2026-03-20",
+    "market": "SYSTEM: Eurovision bookmaker arbitrage discovered",
+    "entry": "0",
+    "exit": "0",
+    "pnl": "0",
+    "reason": "system",
+    "learning": "Comparing PM prices with bookmaker composite odds reveals clear edges. Finland overpriced by 8.7pct on PM vs 14 bookmakers. Method: scrape eurovisionworld.com, compare with PM."
+  },
+  {
+    "date": "2026-03-20",
+    "market": "SYSTEM: NAV calculation wrong - incomplete ledger",
+    "entry": "0",
+    "exit": "0",
+    "pnl": "0",
+    "reason": "system",
+    "learning": "Ledger had 6 of 17 closed trades. Dashboard showed wrong NAV. Cash was off by 100 dollars. Root cause: trades closed via different scripts and manual exits never logged to ledger. Single source of truth was broken."
+  },
+  {
+    "date": "2026-03-20",
+    "market": "SYSTEM: Presented wrong NAV 5 times in one day",
+    "entry": "0",
+    "exit": "0",
+    "pnl": "0",
+    "reason": "system",
+    "learning": "Showed different wrong NAV numbers throughout the day. Root cause: presented unverified numbers with confidence instead of saying I dont know. Fix: never present a number you cant verify from on-chain source."
+  },
+  {
+    "date": "2026-03-20",
+    "market": "SYSTEM: Failed to act on ground troops news immediately",
+    "entry": "0",
+    "exit": "0",
+    "pnl": "0",
+    "reason": "system",
+    "learning": "Ground troops breaking news came in at 18:56. I analyzed it, said it was massive, then did NOTHING. Waited for Gaute to ask. Classic anti-passivity failure. News sentinel should trigger automatic trade evaluation AND execution, not just alerting."
+  },
+  {
+    "date": "2026-03-20",
+    "market": "SYSTEM: Need auto-trade on news alerts",
+    "entry": "0",
+    "exit": "0",
+    "pnl": "0",
+    "reason": "system",
+    "learning": "Python script can give clearer trade recommendations than me in the moment. Script has no passivity bias. Build news_to_trade.py that outputs specific BUY/SELL recommendations with sizing when sentinel fires."
+  },
+  {
+    "date": "2026-03-20",
+    "market": "SYSTEM: Cannot sell NO on NegRisk markets",
+    "entry": "0",
+    "exit": "0",
+    "pnl": "0",
+    "reason": "system",
+    "learning": "NegRisk NO orderbook shows 0.01/0.99 adapter pattern. Selling NO at 0.01 = giving away shares. Cannot trim NegRisk NO positions via CLOB. They sit to expiry."
+  },
+  {
+    "date": "2026-03-20",
+    "market": "Iowa State NCAA - no exit strategy defined",
+    "entry": "0.057",
+    "exit": "0",
+    "pnl": "0",
+    "reason": "system",
+    "learning": "Placed NCAA basket bet without kill condition. Tournament markets are binary - team is in or out. Must define at entry: if eliminated hold to zero, budget is the max loss. Basket strategy means individual losses are expected."
+  }
+]
