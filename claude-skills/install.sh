@@ -28,12 +28,104 @@ is_windows() {
 CLAUDE_SKILLS_DIR="$HOME/.claude/skills"
 COPILOT_SKILLS_DIR="$HOME/.copilot/skills"
 
+# Count files in a directory (depth 1 only, or recursive)
+# Usage: count_files <dir> [recursive]
+# NOTE: Windows Git Bash resolves `find` to FIND.exe, so we use
+# PowerShell on Windows and GNU find on Unix.
+count_files() {
+    local dir="$1"
+    local mode="${2:-shallow}"
+    if is_windows; then
+        local win_dir
+        win_dir="$(cygpath -w "$dir")"
+        if [[ "$mode" == "recursive" ]]; then
+            powershell -NoProfile -Command "(@(Get-ChildItem -Path '${win_dir}' -Recurse -File -ErrorAction SilentlyContinue)).Count" 2>/dev/null || echo 0
+        else
+            powershell -NoProfile -Command "(@(Get-ChildItem -Path '${win_dir}' -File -ErrorAction SilentlyContinue)).Count" 2>/dev/null || echo 0
+        fi
+    else
+        if [[ "$mode" == "recursive" ]]; then
+            find "$dir" -type f 2>/dev/null | wc -l
+        else
+            find "$dir" -maxdepth 1 -type f 2>/dev/null | wc -l
+        fi
+    fi
+}
+
 # Local skills target: OneDrive AI SKILLS folder
 if is_windows; then
     LOCAL_SKILLS_BASE="$(cygpath "$USERPROFILE/OneDrive - KONGSBERG/Documents/AI SKILLS")"
 else
     LOCAL_SKILLS_BASE="$HOME/OneDrive - KONGSBERG/Documents/AI SKILLS"
 fi
+
+# --- Repo Integrity Check ---
+# Verify that source directories in the repo contain real files, not junctions
+# or empty dirs. Aborts if the repo looks corrupted.
+verify_repo_integrity() {
+    local source_dirs=("$REPO_DIR/global/universal" "$REPO_DIR/global/work" "$REPO_DIR/global/personal")
+    local errors=0
+
+    for sdir in "${source_dirs[@]}"; do
+        [[ -d "$sdir" ]] || continue
+
+        local dir_count=0
+        local empty_count=0
+        local junction_count=0
+
+        for skill_dir in "$sdir"/*/; do
+            [[ -d "$skill_dir" ]] || continue
+            local sname
+            sname="$(basename "$skill_dir")"
+            [[ "$sname" == "*" ]] && continue
+
+            dir_count=$((dir_count + 1))
+
+            # Check for junctions/symlinks in the repo (should never exist)
+            if [[ -L "$skill_dir" ]]; then
+                echo "  ERROR: $(basename "$sdir")/$sname is a symlink inside the repo!"
+                junction_count=$((junction_count + 1))
+            elif is_windows; then
+                local win_path
+                win_path="$(cygpath -w "$skill_dir")"
+                local rp
+                rp="$(powershell -NoProfile -Command "(Get-Item -Path '${win_path}' -Force).Attributes -match 'ReparsePoint'" 2>/dev/null || echo "False")"
+                if [[ "$rp" == "True" ]]; then
+                    echo "  ERROR: $(basename "$sdir")/$sname is a junction inside the repo!"
+                    junction_count=$((junction_count + 1))
+                fi
+            fi
+
+            # Check for empty skill dirs (should have at least SKILL.md)
+            local file_count
+            file_count="$(count_files "$skill_dir")"
+            if [[ "$file_count" -eq 0 ]]; then
+                echo "  WARNING: $(basename "$sdir")/$sname has no files"
+                empty_count=$((empty_count + 1))
+            fi
+        done
+
+        if [[ "$junction_count" -gt 0 ]]; then
+            echo ""
+            echo "FATAL: Found $junction_count junction(s)/symlink(s) inside the repo source directory."
+            echo "The repo is corrupted. Run 'git checkout HEAD -- global/' to restore."
+            errors=$((errors + 1))
+        fi
+
+        if [[ "$dir_count" -gt 0 ]] && [[ "$empty_count" -eq "$dir_count" ]]; then
+            echo ""
+            echo "FATAL: All $dir_count skill dirs in $(basename "$sdir")/ are empty."
+            echo "The repo is corrupted. Run 'git checkout HEAD -- global/' to restore."
+            errors=$((errors + 1))
+        fi
+    done
+
+    if [[ "$errors" -gt 0 ]]; then
+        echo ""
+        echo "Aborting. Fix the repo before running install."
+        exit 1
+    fi
+}
 
 cmd="${1:-}"
 arg="${2:-}"
@@ -220,6 +312,7 @@ adopt_unadopted_skills() {
         return
     fi
 
+    local adopted_skills=()
     for u in "${unadopted[@]}"; do
         local sname
         sname="$(basename "$u")"
@@ -233,6 +326,20 @@ adopt_unadopted_skills() {
             powershell -NoProfile -Command "Copy-Item -Path '${win_src}' -Destination '${win_dest}' -Recurse -Force" 2>/dev/null
         else
             cp -R "$u" "$dest"
+        fi
+
+        # Verify copy succeeded before touching the original
+        if [[ ! -d "$dest" ]]; then
+            echo "  FAILED to copy $sname to repo -- skipping (original preserved)"
+            continue
+        fi
+        local src_file_count dest_file_count
+        src_file_count="$(count_files "$u" recursive)"
+        dest_file_count="$(count_files "$dest" recursive)"
+        if [[ "$dest_file_count" -lt "$src_file_count" ]]; then
+            echo "  FAILED: copied $dest_file_count/$src_file_count files for $sname -- skipping (original preserved)"
+            rm -rf "$dest"
+            continue
         fi
 
         # Replace with junction/symlink in ALL target dirs that have this real dir
@@ -250,8 +357,32 @@ adopt_unadopted_skills() {
                 fi
             fi
         done
+        adopted_skills+=("$sname")
         echo "  ADOPTED $sname -> global/universal/"
     done
+
+    # Auto-commit adopted skills so they're immediately protected by git
+    if [[ ${#adopted_skills[@]} -gt 0 ]]; then
+        echo ""
+        echo "Committing adopted skills to git..."
+        local old_dir
+        old_dir="$(pwd)"
+        cd "$REPO_DIR"
+        if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+            for ask in "${adopted_skills[@]}"; do
+                git add "global/universal/$ask" 2>/dev/null || true
+            done
+            local names
+            names="$(printf '%s, ' "${adopted_skills[@]}")"
+            names="${names%, }"
+            git commit -m "Adopt skill(s): $names" --no-verify 2>/dev/null && \
+                echo "  Committed: $names" || \
+                echo "  WARNING: git commit failed -- run 'git add' and commit manually"
+        else
+            echo "  WARNING: not a git repo -- adopted skills are NOT protected by git"
+        fi
+        cd "$old_dir"
+    fi
     echo ""
 }
 
@@ -261,6 +392,7 @@ case "$cmd" in
         echo "  -> $CLAUDE_SKILLS_DIR"
         echo "  -> $COPILOT_SKILLS_DIR"
         echo ""
+        verify_repo_integrity
         adopt_unadopted_skills "$CLAUDE_SKILLS_DIR" "$COPILOT_SKILLS_DIR"
         link_skills "$REPO_DIR/global/universal" "$CLAUDE_SKILLS_DIR" "$COPILOT_SKILLS_DIR"
         link_skills "$REPO_DIR/global/work" "$CLAUDE_SKILLS_DIR" "$COPILOT_SKILLS_DIR"
@@ -270,6 +402,7 @@ case "$cmd" in
         echo "  -> $CLAUDE_SKILLS_DIR"
         echo "  -> $COPILOT_SKILLS_DIR"
         echo ""
+        verify_repo_integrity
         adopt_unadopted_skills "$CLAUDE_SKILLS_DIR" "$COPILOT_SKILLS_DIR"
         link_skills "$REPO_DIR/global/universal" "$CLAUDE_SKILLS_DIR" "$COPILOT_SKILLS_DIR"
         link_skills "$REPO_DIR/global/personal" "$CLAUDE_SKILLS_DIR" "$COPILOT_SKILLS_DIR"
@@ -279,6 +412,7 @@ case "$cmd" in
         echo "Installing agent skills (Trym)"
         echo "  -> $TRYM_SKILLS_DIR"
         echo ""
+        verify_repo_integrity
         link_skills "$REPO_DIR/global/universal" "$TRYM_SKILLS_DIR"
         link_skills "$REPO_DIR/global/personal" "$TRYM_SKILLS_DIR"
         link_skills "$REPO_DIR/agents/trym" "$TRYM_SKILLS_DIR"
@@ -288,6 +422,7 @@ case "$cmd" in
         echo "Installing agent skills (Nova)"
         echo "  -> $NOVA_SKILLS_DIR"
         echo ""
+        verify_repo_integrity
         link_skills "$REPO_DIR/agents/nova" "$NOVA_SKILLS_DIR"
         ;;
     local)
@@ -315,6 +450,7 @@ case "$cmd" in
         local_target="$LOCAL_SKILLS_BASE/$arg"
         echo "Installing local skills ($arg) to $local_target"
         echo ""
+        verify_repo_integrity
         link_skills "$local_source" "$local_target"
         ;;
     *)
