@@ -70,9 +70,20 @@ link_one() {
         win_source="$(cygpath -w "$source")"
         win_target="$(cygpath -w "$target")"
 
-        # Remove existing junction, directory, or broken symlink
+        # Check if target is a real directory (not a junction/symlink) -- never destroy it
+        if [[ -d "$target" ]] && ! [[ -L "$target" ]]; then
+            # Test if it's a junction (reparse point) via PowerShell
+            local is_junction
+            is_junction="$(powershell -NoProfile -Command "(Get-Item -Path '${win_target}' -Force).Attributes -match 'ReparsePoint'" 2>/dev/null || echo "False")"
+            if [[ "$is_junction" != "True" ]]; then
+                echo "    SKIP $(basename "$target") (real directory exists -- not managed by installer)"
+                return 1
+            fi
+        fi
+
+        # Remove existing junction or broken symlink (safe -- these are just pointers)
         if [[ -d "$target" ]] || [[ -L "$target" ]]; then
-            powershell -NoProfile -Command "Remove-Item -Path '${win_target}' -Recurse -Force" 2>/dev/null || rm -f "$target" 2>/dev/null || true
+            powershell -NoProfile -Command "Remove-Item -Path '${win_target}' -Force" 2>/dev/null || rm -f "$target" 2>/dev/null || true
         fi
 
         powershell -NoProfile -Command "New-Item -ItemType Junction -Path '${win_target}' -Target '${win_source}' | Out-Null" 2>/dev/null
@@ -109,6 +120,11 @@ link_skills() {
         local skill_name
         skill_name="$(basename "$skill_dir")"
 
+        # Skip invalid names (glob artifacts, dotfiles)
+        [[ "$skill_name" == "*" ]] && continue
+        [[ "$skill_name" == "." ]] && continue
+        [[ "$skill_name" == ".." ]] && continue
+
         local all_ok=true
         for td in "${target_dirs[@]}"; do
             if ! link_one "$skill_dir" "$td/$skill_name"; then
@@ -123,12 +139,129 @@ link_skills() {
     echo "  $(basename "$source_dir"): linked $count skills"
 }
 
+# --- Adopt Flow ---
+# Detect real (non-junction/non-symlink) skill directories in target dirs
+# that don't exist in the repo. Offer to copy them into global/universal/
+# and replace with junctions.
+ADOPT_TARGET="$REPO_DIR/global/universal"
+
+# Check if a directory is a real directory (not a junction or symlink)
+is_real_dir() {
+    local dir="$1"
+    [[ -d "$dir" ]] || return 1
+    [[ -L "$dir" ]] && return 1
+    if is_windows; then
+        local win_dir
+        win_dir="$(cygpath -w "$dir")"
+        local rp
+        rp="$(powershell -NoProfile -Command "(Get-Item -Path '${win_dir}' -Force).Attributes -match 'ReparsePoint'" 2>/dev/null || echo "False")"
+        [[ "$rp" != "True" ]]
+    else
+        return 0
+    fi
+}
+
+# Scan target dirs for unadopted skills and offer to adopt them
+adopt_unadopted_skills() {
+    local target_dirs=("$@")
+    local unadopted=()
+
+    for td in "${target_dirs[@]}"; do
+        [[ -d "$td" ]] || continue
+        for skill_path in "$td"/*/; do
+            [[ -d "$skill_path" ]] || continue
+            local sname
+            sname="$(basename "$skill_path")"
+
+            # Skip invalid names (glob artifacts, dotfiles)
+            [[ "$sname" == "*" ]] && continue
+            [[ "$sname" == "." ]] && continue
+            [[ "$sname" == ".." ]] && continue
+
+            # Skip if already in repo (any category)
+            if [[ -d "$REPO_DIR/global/universal/$sname" ]] \
+                || [[ -d "$REPO_DIR/global/work/$sname" ]] \
+                || [[ -d "$REPO_DIR/global/personal/$sname" ]]; then
+                continue
+            fi
+
+            # Skip if it's already a junction/symlink
+            if ! is_real_dir "$skill_path"; then
+                continue
+            fi
+
+            # Check we haven't already listed this skill (from another target dir)
+            local already=false
+            for u in "${unadopted[@]+"${unadopted[@]}"}"; do
+                if [[ "$(basename "$u")" == "$sname" ]]; then
+                    already=true
+                    break
+                fi
+            done
+            $already && continue
+
+            unadopted+=("$skill_path")
+        done
+    done
+
+    if [[ ${#unadopted[@]} -eq 0 ]]; then
+        return
+    fi
+
+    echo ""
+    echo "Found ${#unadopted[@]} skill(s) not in the repo:"
+    for u in "${unadopted[@]}"; do
+        echo "  - $(basename "$u")  ($(dirname "$u"))"
+    done
+    echo ""
+    read -r -p "Adopt into global/universal/ and replace with junctions? [y/N] " answer
+    if [[ "$answer" != "y" ]] && [[ "$answer" != "Y" ]]; then
+        echo "  Skipping adoption."
+        return
+    fi
+
+    for u in "${unadopted[@]}"; do
+        local sname
+        sname="$(basename "$u")"
+        local dest="$ADOPT_TARGET/$sname"
+
+        # Copy to repo
+        if is_windows; then
+            local win_src win_dest
+            win_src="$(cygpath -w "$u")"
+            win_dest="$(cygpath -w "$dest")"
+            powershell -NoProfile -Command "Copy-Item -Path '${win_src}' -Destination '${win_dest}' -Recurse -Force" 2>/dev/null
+        else
+            cp -R "$u" "$dest"
+        fi
+
+        # Replace with junction/symlink in ALL target dirs that have this real dir
+        for td in "${target_dirs[@]}"; do
+            local tpath="$td/$sname"
+            if is_real_dir "$tpath"; then
+                if is_windows; then
+                    local win_t
+                    win_t="$(cygpath -w "$tpath")"
+                    powershell -NoProfile -Command "Remove-Item -Path '${win_t}' -Recurse -Force" 2>/dev/null
+                    powershell -NoProfile -Command "New-Item -ItemType Junction -Path '${win_t}' -Target '$(cygpath -w "$dest")' | Out-Null" 2>/dev/null
+                else
+                    rm -rf "$tpath"
+                    ln -s "$dest" "$tpath"
+                fi
+            fi
+        done
+        echo "  ADOPTED $sname -> global/universal/"
+    done
+    echo ""
+}
+
 case "$cmd" in
     work)
         echo "Installing global skills (work)"
         echo "  -> $CLAUDE_SKILLS_DIR"
         echo "  -> $COPILOT_SKILLS_DIR"
         echo ""
+        adopt_unadopted_skills "$CLAUDE_SKILLS_DIR" "$COPILOT_SKILLS_DIR"
         link_skills "$REPO_DIR/global/universal" "$CLAUDE_SKILLS_DIR" "$COPILOT_SKILLS_DIR"
         link_skills "$REPO_DIR/global/work" "$CLAUDE_SKILLS_DIR" "$COPILOT_SKILLS_DIR"
         ;;
@@ -137,6 +270,7 @@ case "$cmd" in
         echo "  -> $CLAUDE_SKILLS_DIR"
         echo "  -> $COPILOT_SKILLS_DIR"
         echo ""
+        adopt_unadopted_skills "$CLAUDE_SKILLS_DIR" "$COPILOT_SKILLS_DIR"
         link_skills "$REPO_DIR/global/universal" "$CLAUDE_SKILLS_DIR" "$COPILOT_SKILLS_DIR"
         link_skills "$REPO_DIR/global/personal" "$CLAUDE_SKILLS_DIR" "$COPILOT_SKILLS_DIR"
         ;;
