@@ -138,8 +138,11 @@ if [[ -z "$cmd" ]]; then
     echo "    ./install.sh personal   # universal + personal skills"
     echo ""
     echo "  Agent (project-specific agent installs):"
-    echo "    ./install.sh trym       # universal + personal + trym skills → clawd/skills/"
-    echo "    ./install.sh nova       # nova skills → ClaudeClaw/.claude/skills/"
+    echo "    ./install.sh trym          # universal + personal + trym skills → clawd/skills/"
+    echo "    ./install.sh nova          # nova skills → ClaudeClaw/.claude/skills/"
+    echo "    ./install.sh nova-home     # nova-home skills → NovaHome/.claude/skills/"
+    echo "    ./install.sh nova-cfo      # nova-cfo skills → NovaCFO/.claude/skills/"
+    echo "    ./install.sh nova-trading  # nova-trading skills → NovaTrading/.claude/skills/"
     echo ""
     echo "  Local (into AI SKILLS folder):"
     echo "    ./install.sh local km        # KM skills"
@@ -425,6 +428,30 @@ case "$cmd" in
         verify_repo_integrity
         link_skills "$REPO_DIR/agents/nova" "$NOVA_SKILLS_DIR"
         ;;
+    nova-home)
+        NOVA_HOME_SKILLS_DIR="$HOME/NovaHome/.claude/skills"
+        echo "Installing agent skills (Nova Home)"
+        echo "  -> $NOVA_HOME_SKILLS_DIR"
+        echo ""
+        verify_repo_integrity
+        link_skills "$REPO_DIR/agents/nova-home" "$NOVA_HOME_SKILLS_DIR"
+        ;;
+    nova-cfo)
+        NOVA_CFO_SKILLS_DIR="$HOME/NovaCFO/.claude/skills"
+        echo "Installing agent skills (Nova CFO)"
+        echo "  -> $NOVA_CFO_SKILLS_DIR"
+        echo ""
+        verify_repo_integrity
+        link_skills "$REPO_DIR/agents/nova-cfo" "$NOVA_CFO_SKILLS_DIR"
+        ;;
+    nova-trading)
+        NOVA_TRADING_SKILLS_DIR="$HOME/NovaTrading/.claude/skills"
+        echo "Installing agent skills (Nova Trading)"
+        echo "  -> $NOVA_TRADING_SKILLS_DIR"
+        echo ""
+        verify_repo_integrity
+        link_skills "$REPO_DIR/agents/nova-trading" "$NOVA_TRADING_SKILLS_DIR"
+        ;;
     local)
         if [[ -z "$arg" ]]; then
             echo "Usage: ./install.sh local <km|hydepoint|...>"
@@ -455,7 +482,7 @@ case "$cmd" in
         ;;
     *)
         echo "Unknown command: $cmd"
-        echo "Use: work, personal, trym, nova, or local <folder>"
+        echo "Use: work, personal, trym, nova, nova-home, nova-cfo, nova-trading, or local <folder>"
         exit 1
         ;;
 esac
