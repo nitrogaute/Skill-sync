@@ -1,0 +1,16 @@
+{
+  "eval_id": 1,
+  "eval_name": "house-purchase-feasibility",
+  "prompt": "We're seriously considering buying a house in the Stavanger area, probably around 11M NOK. Combined household income is about 1.5M/year from KM, and we have roughly 1.5M in KOG/KM stocks on ASK. Elsa works too but I'm not sure of her exact salary. Is this realistic? What's the smartest way to finance it, and how does it affect my path to financial freedom?",
+  "assertions": [
+    "Checks current Norwegian mortgage rates via web search",
+    "Applies Norwegian lending rules: 5x income cap, 15% equity requirement, stress test at current rate +3%",
+    "Identifies that 1.5M single income means max 7.5M loan — flags need for dual income or more equity",
+    "Considers tax implications of selling shares from ASK (only taxed on withdrawal above deposits)",
+    "Presents both bull and bear case for the purchase",
+    "Models at least 2 financing scenarios with different equity/loan mixes",
+    "All key amounts presented in NOK and after-tax",
+    "Includes Financial Freedom Impact section showing how purchase affects FI number and timeline",
+    "Recommends consulting revisor or advokat before executing"
+  ]
+}

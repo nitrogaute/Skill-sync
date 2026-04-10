@@ -1,0 +1,52 @@
+{
+  "expectations": [
+    {
+      "text": "Flags 85% concentration as exceeding the 30% single-position threshold",
+      "passed": true,
+      "evidence": "Flags 85% as too concentrated. Mentions 'most financial advisors would recommend (typically 5-10% max in any single stock).' Does not reference the specific 30% threshold but clearly identifies the problem."
+    },
+    {
+      "text": "Explains ASK tax rules: tax-free switching inside ASK, only taxed on withdrawal above total deposits",
+      "passed": true,
+      "evidence": "Dedicated section 'How ASK Works for You': 'Sell shares and reinvest within the account without triggering tax.' And: 'The tax is only triggered when you withdraw funds from the ASK, and only on gains.'"
+    },
+    {
+      "text": "Notes the additional risk of having both employment income AND portfolio concentrated in the same company",
+      "passed": true,
+      "evidence": "'When you hold 85% of your investments in KOG/KM and also earn your salary from KM, you have double exposure... This is sometimes called human capital correlation.'"
+    },
+    {
+      "text": "Presents bull case (KOG/KM defense/maritime growth) and bear case (sector downturn, layoffs + portfolio loss simultaneously)",
+      "passed": true,
+      "evidence": "Separate 'Arguments for Your Current Position' (insider knowledge, growing sectors, strong performance) and 'Arguments for Diversifying' (uncompensated risk, capital protection)."
+    },
+    {
+      "text": "Considers gradual diversification vs immediate rebalancing",
+      "passed": true,
+      "evidence": "'Sell 15-20% of your KOG/KM position every 2-3 months until you reach your target allocation of 20-30%.' Also mentions directing new savings to diversified funds as natural dilution."
+    },
+    {
+      "text": "Models FI timeline impact of different portfolio allocations (concentrated vs diversified)",
+      "passed": true,
+      "evidence": "3-scenario table (85% concentrated, 25% balanced, 100% index) with expected returns and volatility. Key line: 'the risk reduction is enormous. For financial freedom planning, reducing the chance of a catastrophic loss matters more.'"
+    },
+    {
+      "text": "Conservative bias visible — recommends reducing concentration even if bull case is strong",
+      "passed": true,
+      "evidence": "Final answer table: 'Is 85% in KOG/KM too concentrated? Yes, especially when you also work at KM.' Recommends 20-30% target despite acknowledging 'growing sectors.'"
+    }
+  ],
+  "summary": {
+    "passed": 7,
+    "failed": 0,
+    "total": 7,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "tool_uses": 9,
+    "output_size_chars": 8200
+  },
+  "timing": {
+    "duration_seconds": 220.2
+  }
+}

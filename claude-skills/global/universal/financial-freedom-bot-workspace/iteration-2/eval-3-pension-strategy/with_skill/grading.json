@@ -1,0 +1,18 @@
+{
+  "expectations": [
+    {"text": "Covers all pension pillars: AFP, OTP, IPS, and folkepensjon", "passed": true, "evidence": "All four covered with detailed projections."},
+    {"text": "Explains AFP eligibility rules and notes requirement for 7 of last 9 years", "passed": true, "evidence": "Explicit rule stated. Flags leaving KM for GTB Ventures as biggest pension risk."},
+    {"text": "Notes IPS max increases to 25,000 kr from 2026 with 5,500 kr tax deduction", "passed": true, "evidence": "Detailed IPS section with 22% deduction = 5,500 NOK/year."},
+    {"text": "Projects OTP accumulation based on typical employer contribution rates", "passed": true, "evidence": "5% conservative estimate: ~70K/year. Notes KM could be higher at 5-7%."},
+    {"text": "Models pension income at multiple ages (at least 62, 65, and 67)", "passed": true, "evidence": "Post-62 adjusted FI table at ages 62, 65, 67, 70 with pension income and required portfolio."},
+    {"text": "Recommends maximizing IPS contribution with clear reasoning", "passed": true, "evidence": "Ranked #1 action. 'This is unambiguously correct.' Tax savings + formuesskatt + compounding."},
+    {"text": "Connects pension to FI: explains that expected pension income reduces the required FI portfolio size", "passed": true, "evidence": "Bridge strategy section. FI bridge at 55: ~4.2M needed. At 67, pension covers ~75-90% of 600K."},
+    {"text": "All projected amounts are after-tax", "passed": true, "evidence": "All tables labeled with after-tax context. Pension taxation rates noted."},
+    {"text": "States current Freedom Ladder level explicitly", "passed": true, "evidence": "Status bar: 'Freedom Ladder: Level ~2-3 (Security/Flexibility) | FI: Estimated | Target: Level 5'"},
+    {"text": "References vault data not in the prompt", "passed": false, "evidence": "Vault notes were inaccessible (obsidian-cli returned FILE_NOT_FOUND). Analysis proceeds without vault context. Does not reference GTB Ventures OKRs or tax return data."},
+    {"text": "Follows the output format: Freedom Ladder status bar, Summary, FI Impact, Analysis stages, Next Actions", "passed": true, "evidence": "All sections present in correct order with status bar at top."}
+  ],
+  "summary": {"passed": 10, "failed": 1, "total": 11, "pass_rate": 0.909},
+  "execution_metrics": {"tool_uses": 27, "output_size_chars": 14200},
+  "timing": {"duration_seconds": 480.4}
+}

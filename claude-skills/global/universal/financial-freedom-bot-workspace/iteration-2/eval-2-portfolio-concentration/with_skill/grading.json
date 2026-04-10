@@ -1,0 +1,17 @@
+{
+  "expectations": [
+    {"text": "Flags 85% concentration as exceeding the 30% single-position threshold", "passed": true, "evidence": "Explicit 30% threshold reference throughout. Target allocation 55-60%."},
+    {"text": "Explains ASK tax rules: tax-free switching inside ASK, only taxed on withdrawal above total deposits", "passed": true, "evidence": "Dedicated tax table comparing inside vs outside ASK. '1.13M unrealized gains... zero tax.'"},
+    {"text": "Notes the additional risk of having both employment income AND portfolio concentrated in the same company", "passed": true, "evidence": "'5 income streams tied to Kongsberg simultaneously.' Career correlation identified as 'decisive.'"},
+    {"text": "Presents bull case and bear case", "passed": true, "evidence": "Full adversarial table with probability estimates (30% bull, 20% bear)."},
+    {"text": "Considers gradual diversification vs immediate rebalancing", "passed": true, "evidence": "3-phase execution plan: pre-demerger, post-demerger, ongoing. Gradual over months."},
+    {"text": "Models FI timeline impact of different portfolio allocations", "passed": true, "evidence": "Three scenario tables (A/B/C) at 1/5/10/25yr horizons with base and bear cases and FI progress."},
+    {"text": "Conservative bias visible — recommends reducing concentration even if bull case is strong", "passed": true, "evidence": "'55-60% IS conviction. That is a 55-60x overweight vs index weight.'"},
+    {"text": "States current Freedom Ladder level explicitly", "passed": true, "evidence": "Status bar: 'Freedom Ladder: Level 1 (Buffer) | FI: ~6% | Target: Level 5'"},
+    {"text": "Calculates a specific FI number using the 3.5% SWR formula", "passed": true, "evidence": "FI number (estimated): ~28.6M NOK (annual expenses ~1.0M / 3.5% SWR)"},
+    {"text": "References specific vault data not in the prompt", "passed": true, "evidence": "KOG Demerger Strategy: 3,600 shares, demerger April 22, dividend 5.70/share, lock-up 150k shares, Q1 earnings April 30. Skattemelding: net wealth ~320k. Personal Finance Plan: month-to-month spending."}
+  ],
+  "summary": {"passed": 10, "failed": 0, "total": 10, "pass_rate": 1.0},
+  "execution_metrics": {"tool_uses": 40, "output_size_chars": 13500},
+  "timing": {"duration_seconds": 759.7}
+}

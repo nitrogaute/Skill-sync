@@ -1,0 +1,18 @@
+{
+  "expectations": [
+    {"text": "Applies Norwegian lending rules: 5x income cap, 15% equity requirement, stress test at current rate +3%", "passed": true, "evidence": "Detailed stress test calculations showing 7.5% rate, 68,800/month payment. Explicit 5x and 15% checks."},
+    {"text": "Identifies that 1.5M single income means max 7.5M loan — flags need for dual income or more equity", "passed": true, "evidence": "Clear calculation. Also discovers from Skattemelding 2025 that Elsa was a student with no income in 2025."},
+    {"text": "Considers tax implications of selling shares from ASK", "passed": true, "evidence": "Full ASK liquidation scenario with 850K gain * 37.84% = 322K tax. Net 1,188K."},
+    {"text": "Presents both bull and bear case for the purchase", "passed": true, "evidence": "6-factor adversarial table with probability estimates (40% bull, 25% bear, 35% base)."},
+    {"text": "Models at least 2 financing scenarios with different equity/loan mixes", "passed": true, "evidence": "Three scenarios: 11M, 9M, and rent+invest. Full 25-year projections for each."},
+    {"text": "All key amounts presented in NOK and after-tax", "passed": true, "evidence": "Consistent NOK, after-tax ASK calculations, gjeldsrenter deduction, formuesskatt comparison."},
+    {"text": "Includes Financial Freedom Impact section with FI number calculation (expenses / 3.5% SWR)", "passed": true, "evidence": "FI number: ~17.1M NOK (estimated annual expenses 600K / 3.5% SWR). Explicit formula."},
+    {"text": "States current Freedom Ladder level explicitly", "passed": true, "evidence": "Opening status bar: 'Freedom Ladder: Level 1 (Buffer) | FI: ~9% | Target: Level 5'"},
+    {"text": "References specific data from vault notes not mentioned in the prompt", "passed": true, "evidence": "Discovered: Elsa's 2025 income status (Skattemelding), existing debt of 206K interest (Skattemelding), insider trading quiet period (KOG Demerger Strategy), demerger timeline April 22, net wealth 319,855 NOK."},
+    {"text": "Recommends a more conservative approach than the 11M directly asked about", "passed": true, "evidence": "Primary recommendation: 'target a property in the 8-9M range.' Shows 9M passes stress test while 11M fails."},
+    {"text": "Recommends consulting revisor or advokat before executing", "passed": true, "evidence": "Opening and closing disclaimers both present."}
+  ],
+  "summary": {"passed": 11, "failed": 0, "total": 11, "pass_rate": 1.0},
+  "execution_metrics": {"tool_uses": 36, "output_size_chars": 14500},
+  "timing": {"duration_seconds": 439.4}
+}

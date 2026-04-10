@@ -1,0 +1,64 @@
+{
+  "expectations": [
+    {
+      "text": "Covers all pension pillars: AFP, OTP, IPS, and folkepensjon",
+      "passed": true,
+      "evidence": "Four dedicated sections: 'Pillar 1: Folkepensjon', 'Pillar 2: AFP', 'Pillar 3: OTP from KM', 'Pillar 4: IPS'. Each with eligibility rules, projections, and after-tax amounts."
+    },
+    {
+      "text": "Explains AFP eligibility rules and notes requirement for 7 of last 9 years in AFP-covered employment before 62",
+      "passed": true,
+      "evidence": "'Must have been in AFP-covered employment for 7 of the last 9 years before turning 62.' Also flags strategic implication: 'staying at KM (or another AFP employer) until at least age ~55 before any full-time entrepreneurial switch.'"
+    },
+    {
+      "text": "Notes IPS max increases to 25,000 kr from 2026 with 5,500 kr tax deduction",
+      "passed": true,
+      "evidence": "Screening table: 'IPS maximum increased to 25,000 kr/year (from 15,000)... Effective from 2026 tax year... High — you are leaving 10,000 kr of contribution room unused.' Tax deduction: '22% of contribution = 5,500 kr/year (at 25k).'"
+    },
+    {
+      "text": "Projects OTP accumulation based on typical employer contribution rates",
+      "passed": true,
+      "evidence": "Models both 5% and 7% employer rates. At 5%: ~68,800/yr → 3.7M at 62. At 7%: ~96,300/yr → 5.2M at 62. Contribution base calculated: '1,500,000 - 124,028 (1G) = 1,375,972 kr.'"
+    },
+    {
+      "text": "Models pension income at multiple ages (at least 62, 65, and 67)",
+      "passed": true,
+      "evidence": "Combined projection table at ages 62, 65, 67, and 72 (with two drawdown scenarios at 72). After-tax totals range from 525-711k at 62 to 570-761k at 67."
+    },
+    {
+      "text": "Recommends maximizing IPS contribution with clear reasoning (tax deduction + formuesskatt exemption)",
+      "passed": true,
+      "evidence": "Option A (recommended): 'Maximize IPS to 25,000 kr/year.' Reasoning: immediate tax deduction (5,500/yr), formuesskatt exemption, compounding benefit, and: 'it is an interest-free loan from the state.' Net cost: 7,800 kr/year."
+    },
+    {
+      "text": "Connects pension to FI: explains that expected pension income reduces the required FI portfolio size",
+      "passed": true,
+      "evidence": "Dedicated 'Pension as FI Accelerator' section. FI without pension: 17.1M. FI with pension at 62: 2.1M (or 0 if pension covers expenses). Introduces 'bridge portfolio' concept: 'build a bridge portfolio to cover ages 50-62, pension takes over from there.'"
+    },
+    {
+      "text": "All projected amounts are after-tax",
+      "passed": true,
+      "evidence": "All pension projection tables labeled 'After Tax'. Combined table explicitly shows after-tax totals. Tax rates noted: '~25-30% effective pension tax rate.'"
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "failed": 0,
+    "total": 8,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "tool_uses": 35,
+    "output_size_chars": 15800
+  },
+  "timing": {
+    "duration_seconds": 351.1
+  },
+  "claims": [
+    {"type": "quality", "text": "Read vault notes and discovered user is living month-to-month (Personal Finance Plan), positioned at Level 1 on freedom ladder", "verified": true},
+    {"type": "quality", "text": "Flagged AFP eligibility as the biggest strategic risk given GTB Ventures entrepreneurial ambitions from OKRs", "verified": true},
+    {"type": "quality", "text": "Introduced bridge portfolio concept: pension covers 62+, portfolio only needs to bridge gap from early retirement to 62", "verified": true},
+    {"type": "quality", "text": "Connected IPS recommendation to Q4 tax review and norwegian-tax-expert skill delegation", "verified": true}
+  ],
+  "user_notes_summary": "Web search unavailable; FI tracker doesn't exist; expense baseline not established; KM OTP rate unknown; AFP reform risk noted; Obsidian CLI failed."
+}

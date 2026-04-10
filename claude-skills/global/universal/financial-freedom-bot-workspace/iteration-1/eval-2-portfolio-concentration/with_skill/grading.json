@@ -1,0 +1,59 @@
+{
+  "expectations": [
+    {
+      "text": "Flags 85% concentration as exceeding the 30% single-position threshold",
+      "passed": true,
+      "evidence": "Multiple references to >30% threshold. Summary: 'reducing KOG+KM concentration from 85% to 55-60% cuts your maximum single-event drawdown risk.' Screening table notes the demerger concentration risk."
+    },
+    {
+      "text": "Explains ASK tax rules: tax-free switching inside ASK, only taxed on withdrawal above total deposits",
+      "passed": true,
+      "evidence": "Dedicated appendix 'Why ASK Is Your Best Friend Here' with comparison table. Key line: 'Selling KOG inside ASK and buying index funds inside the same ASK = zero tax event.' Also quantifies: 'If you sold outside ASK, you would owe 37.84% * 1.13M = ~427,000 NOK in tax. Inside ASK, this tax is zero.'"
+    },
+    {
+      "text": "Notes the additional risk of having both employment income AND portfolio concentrated in the same company",
+      "passed": true,
+      "evidence": "Adversarial research labels it 'the killer argument' and lists 5 correlated risks: stock drops, salary at risk, OTP pension hit, employee shares lose value, career market value drops — 'All five of these hit at the same time.'"
+    },
+    {
+      "text": "Presents bull case (KOG/KM defense/maritime growth) and bear case (sector downturn, layoffs + portfolio loss simultaneously)",
+      "passed": true,
+      "evidence": "Full adversarial research table with 6 factors (defence spending, insider knowledge, demerger catalyst, tax efficiency, opportunity cost, career correlation) plus probability estimates (30% bull, 20% bear)."
+    },
+    {
+      "text": "Considers gradual diversification vs immediate rebalancing",
+      "passed": true,
+      "evidence": "Phased approach: pre-demerger sales (1,000-1,200 shares), post-demerger KM partial sale, gradual rebalancing to target allocation by June 2026. Three scenarios compared: status quo, 55-60%, and 30%."
+    },
+    {
+      "text": "Models FI timeline impact of different portfolio allocations (concentrated vs diversified)",
+      "passed": true,
+      "evidence": "Three scenario tables (A: 85%, B: 55-60%, C: 30%) each projecting portfolio value and FI progress at 1, 5, 10, and 25 year horizons in both base and bear cases. Key insight: 'diversification saves you 5-10 years on the FI timeline' in bear case."
+    },
+    {
+      "text": "Conservative bias visible — recommends reducing concentration even if bull case is strong",
+      "passed": true,
+      "evidence": "Recommends Option B (55-60%) despite acknowledging 'defence spending is structural, 10+ year cycle.' Explicitly states: 'The asymmetry is the problem... In the bull case, you gain maybe 20-30% more. In the bear case, you could lose 40-60% of net worth.'"
+    }
+  ],
+  "summary": {
+    "passed": 7,
+    "failed": 0,
+    "total": 7,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "tool_uses": 23,
+    "output_size_chars": 16500
+  },
+  "timing": {
+    "duration_seconds": 529.1
+  },
+  "claims": [
+    {"type": "quality", "text": "Read KOG Demerger Strategy vault note and incorporated specific demerger timeline (April 22), share counts (3,600), and existing sell plan (1,000-1,200 shares)", "verified": true},
+    {"type": "quality", "text": "Flagged insider trading quiet period as critical blocker — Q1 report April 30 may prevent pre-demerger trading", "verified": true},
+    {"type": "quality", "text": "Quantified the tax savings of ASK rebalancing: ~427,000 NOK avoided vs. selling outside ASK", "verified": true},
+    {"type": "quality", "text": "Connected to KM employee share program (20% discount in May) as part of rebalancing timeline", "verified": true}
+  ],
+  "user_notes_summary": "Web search unavailable; FI number estimated; exact cost basis unknown; insider trading status unresolved; Stage 5 skipped as eval run."
+}

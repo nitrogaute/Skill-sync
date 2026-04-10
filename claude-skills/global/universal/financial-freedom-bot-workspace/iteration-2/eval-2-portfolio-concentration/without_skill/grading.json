@@ -1,0 +1,17 @@
+{
+  "expectations": [
+    {"text": "Flags 85% concentration as exceeding the 30% single-position threshold", "passed": false, "evidence": "Flags 85% as too concentrated but does not reference the 30% threshold. Uses general language about diversification."},
+    {"text": "Explains ASK tax rules: tax-free switching inside ASK, only taxed on withdrawal above total deposits", "passed": true, "evidence": "Clear explanation of zero-tax rebalancing inside ASK."},
+    {"text": "Notes the additional risk of having both employment income AND portfolio concentrated in the same company", "passed": true, "evidence": "'human capital correlation risk' discussed with concrete scenarios."},
+    {"text": "Presents bull case and bear case", "passed": false, "evidence": "Separate 'case for' and 'case against' sections but not formatted as adversarial research table."},
+    {"text": "Considers gradual diversification vs immediate rebalancing", "passed": true, "evidence": "3-6 month gradual plan described."},
+    {"text": "Models FI timeline impact of different portfolio allocations", "passed": true, "evidence": "Compound growth table at 5/10/15/20 years with diversified portfolio."},
+    {"text": "Conservative bias visible — recommends reducing concentration even if bull case is strong", "passed": true, "evidence": "Recommends 20-30% target despite acknowledging conviction."},
+    {"text": "States current Freedom Ladder level explicitly", "passed": false, "evidence": "No Freedom Ladder reference. No level classification."},
+    {"text": "Calculates a specific FI number using the 3.5% SWR formula", "passed": false, "evidence": "Uses 3.5% SWR but calls it 'conservative' and also references 4% rule. Does not calculate a specific FI number."},
+    {"text": "References specific vault data not in the prompt", "passed": false, "evidence": "No vault data referenced. No specific share counts, demerger dates, cost basis, or tax return figures."}
+  ],
+  "summary": {"passed": 5, "failed": 5, "total": 10, "pass_rate": 0.5},
+  "execution_metrics": {"tool_uses": 7, "output_size_chars": 9200},
+  "timing": {"duration_seconds": 173.6}
+}

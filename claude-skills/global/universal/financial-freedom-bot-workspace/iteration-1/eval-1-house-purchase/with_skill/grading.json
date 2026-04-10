@@ -1,0 +1,70 @@
+{
+  "expectations": [
+    {
+      "text": "Checks current Norwegian mortgage rates via web search",
+      "passed": false,
+      "evidence": "Web search was denied in subagent context. Analysis notes: 'Web search was unavailable. Rates and prices should be verified before acting.' Used ~4.0-5.0% estimate from knowledge base."
+    },
+    {
+      "text": "Applies Norwegian lending rules: 5x income cap, 15% equity requirement, stress test at current rate +3%",
+      "passed": true,
+      "evidence": "Explicit calculations: 'Max loan at 5x single income: 5x 1,500,000 = 7,500,000' and '15% of 11M = 1.65M equity needed' and 'Stress test at 7.5%: ~69K/month payment alone.'"
+    },
+    {
+      "text": "Identifies that 1.5M single income means max 7.5M loan — flags need for dual income or more equity",
+      "passed": true,
+      "evidence": "Scenario A states: 'VERDICT: NOT FEASIBLE on single income with existing debt.' And: 'Available mortgage capacity: 3,500,000... Shortfall: 5,850,000.'"
+    },
+    {
+      "text": "Considers tax implications of selling shares from ASK (only taxed on withdrawal above deposits)",
+      "passed": true,
+      "evidence": "Dedicated 'Tax Considerations' section: 'ASK withdrawal: Only taxed if withdrawal exceeds total deposits... Withdrawing 1M when cost basis is ~378K means: first 378K is tax-free (return of deposits), next 622K is taxed at 37.84% = ~235K in tax.'"
+    },
+    {
+      "text": "Presents both bull and bear case for the purchase",
+      "passed": true,
+      "evidence": "Full adversarial research table with 6 factors (house price trajectory, KOG/KM sale, mortgage affordability, dual income, FI impact, family stability) plus probability estimates (35% bull, 30% bear, 35% base)."
+    },
+    {
+      "text": "Models at least 2 financing scenarios with different equity/loan mixes",
+      "passed": true,
+      "evidence": "Three scenarios modeled: A (single income only), B (dual income at 600K), C (sell current property + dual income). Each with detailed feasibility calculations."
+    },
+    {
+      "text": "All key amounts presented in NOK and after-tax",
+      "passed": true,
+      "evidence": "All amounts in NOK throughout. Tax implications noted: ASK withdrawal tax, gjeldsrenter deduction (22%), formuesskatt treatment. After-tax framing consistent."
+    },
+    {
+      "text": "Includes Financial Freedom Impact section showing how purchase affects FI number and timeline",
+      "passed": true,
+      "evidence": "Dedicated 'Financial Freedom Impact' section with freedom ladder position (Level 1), FI progress (5.9%), FI number (~25.7M), and conclusion: 'DELAYS FI by approximately 5-10 years.'"
+    },
+    {
+      "text": "Recommends consulting revisor or advokat before executing",
+      "passed": true,
+      "evidence": "Opening disclaimer: 'This analysis is for planning purposes -- consult your revisor/advokat before executing.' Also in Next Actions: 'Consult revisor/advokat before executing -- ASK extraction, holding company implications, contract review.'"
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "failed": 1,
+    "total": 9,
+    "pass_rate": 0.889
+  },
+  "execution_metrics": {
+    "tool_uses": 25,
+    "output_size_chars": 14200
+  },
+  "timing": {
+    "duration_seconds": 365.4
+  },
+  "claims": [
+    {"type": "quality", "text": "Read 4 vault notes (KOG Demerger Strategy, Personal Finance Plan, Skattemelding 2025, OKRs Q2 2026) for real financial data", "verified": true},
+    {"type": "quality", "text": "Identified existing debt from tax return interest deductions (~206K/yr = ~4-5M debt) as constraint on borrowing capacity", "verified": true},
+    {"type": "quality", "text": "Discovered that Elsa had no taxable income in 2025 (from skattemelding), flagging conflict with user's 'Elsa works too' statement", "verified": true},
+    {"type": "quality", "text": "Recommended phased approach starting with 8-10M property, not 11M — conservative bias applied", "verified": true},
+    {"type": "quality", "text": "Connected to KOG demerger strategy timeline for share sale timing", "verified": true}
+  ],
+  "user_notes_summary": "Web search unavailable; FI tracker doesn't exist yet; expense baseline not established; existing debt estimated from interest; Obsidian CLI failed, used direct file reads as fallback."
+}
