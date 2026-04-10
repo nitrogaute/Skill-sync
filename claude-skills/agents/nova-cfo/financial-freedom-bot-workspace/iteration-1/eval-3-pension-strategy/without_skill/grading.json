@@ -1,0 +1,57 @@
+{
+  "expectations": [
+    {
+      "text": "Covers all pension pillars: AFP, OTP, IPS, and folkepensjon",
+      "passed": true,
+      "evidence": "Four numbered sections: '1. Folkepensjon', '2. AFP', '3. OTP', '4. IPS'. Each with detailed rules, projections, and amounts."
+    },
+    {
+      "text": "Explains AFP eligibility rules and notes requirement for 7 of last 9 years in AFP-covered employment before 62",
+      "passed": true,
+      "evidence": "'you must have been in AFP-covered employment for at least 7 of the last 9 years before turning 62.' Also: 'if you leave AFP employment after age 53, you are fine (53 to 62 = 9 years, need 7).'"
+    },
+    {
+      "text": "Notes IPS max increases to 25,000 kr from 2026 with 5,500 kr tax deduction",
+      "passed": true,
+      "evidence": "'Maximum annual contribution: 25,000 NOK.' And: 'Tax deduction: 22% of contribution = 5,500 NOK tax reduction per year.'"
+    },
+    {
+      "text": "Projects OTP accumulation based on typical employer contribution rates",
+      "passed": true,
+      "evidence": "Two scenarios: conservative 5% flat (~68,000/yr → 5.3-6.8M) and likely 5%+8% (~86,000/yr → 6.7-8.6M). Detailed calculation of contribution base."
+    },
+    {
+      "text": "Models pension income at multiple ages (at least 62, 65, and 67)",
+      "passed": true,
+      "evidence": "Three combined tables at ages 62, 65, and 67 showing all four pillars with after-tax totals. At 62: ~573-634k, at 65: ~696-772k, at 67: ~949k-1.04M."
+    },
+    {
+      "text": "Recommends maximizing IPS contribution with clear reasoning (tax deduction + formuesskatt exemption)",
+      "passed": true,
+      "evidence": "Priority High, Action Immediate. Four reasons listed: tax savings, formuesskatt savings, 'interest-free loan from the state', and minimal cost (833/month)."
+    },
+    {
+      "text": "Connects pension to FI: explains that expected pension income reduces the required FI portfolio size",
+      "passed": true,
+      "evidence": "'Pension-Adjusted FI Calculation' section. Standard FI: 20M. With pension at 62, gap is 66-127k/yr → required portfolio: ~3.6M. Also: 'Approximate portfolio needed to retire at 50: 10-12M — significantly less than the naive 20M FI number.'"
+    },
+    {
+      "text": "All projected amounts are after-tax",
+      "passed": true,
+      "evidence": "After-tax estimates provided for each pillar. Combined tables labeled 'Annual After-Tax Income.' Tax rates noted (pension trygdeavgift ~5.1% vs salary 7.9%)."
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "failed": 0,
+    "total": 8,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "tool_uses": 18,
+    "output_size_chars": 12500
+  },
+  "timing": {
+    "duration_seconds": 373.6
+  }
+}

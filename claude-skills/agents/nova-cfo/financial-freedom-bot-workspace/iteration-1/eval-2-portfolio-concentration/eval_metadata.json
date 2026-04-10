@@ -1,0 +1,14 @@
+{
+  "eval_id": 2,
+  "eval_name": "portfolio-concentration-risk",
+  "prompt": "My KOG and KM shares on ASK are worth about 1.5M NOK total and make up roughly 85% of my investment portfolio. I know that's concentrated but I work at KM and believe in the company. Should I diversify? If so, how do I do it tax-efficiently? And what does this concentration risk actually mean for reaching financial freedom?",
+  "assertions": [
+    "Flags 85% concentration as exceeding the 30% single-position threshold",
+    "Explains ASK tax rules: tax-free switching inside ASK, only taxed on withdrawal above total deposits",
+    "Notes the additional risk of having both employment income AND portfolio concentrated in the same company",
+    "Presents bull case (KOG/KM defense/maritime growth) and bear case (sector downturn, layoffs + portfolio loss simultaneously)",
+    "Considers gradual diversification vs immediate rebalancing",
+    "Models FI timeline impact of different portfolio allocations (concentrated vs diversified)",
+    "Conservative bias visible — recommends reducing concentration even if bull case is strong"
+  ]
+}

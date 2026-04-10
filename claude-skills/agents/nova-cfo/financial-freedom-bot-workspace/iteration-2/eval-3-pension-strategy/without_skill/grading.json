@@ -1,0 +1,18 @@
+{
+  "expectations": [
+    {"text": "Covers all pension pillars: AFP, OTP, IPS, and folkepensjon", "passed": true, "evidence": "All four pillars covered in detail."},
+    {"text": "Explains AFP eligibility rules and notes requirement for 7 of last 9 years", "passed": true, "evidence": "Clear rule statement. Also flags self-employment risk."},
+    {"text": "Notes IPS max increases to 25,000 kr from 2026 with 5,500 kr tax deduction", "passed": true, "evidence": "25,000 max, 5,500 deduction clearly stated."},
+    {"text": "Projects OTP accumulation based on typical employer contribution rates", "passed": true, "evidence": "Two scenarios: 5% (~69K/yr) and 7% (~96K/yr) with 27-year projections."},
+    {"text": "Models pension income at multiple ages (at least 62, 65, and 67)", "passed": true, "evidence": "No combined table at 62/65/67 — but individual pillar projections at multiple ages and bridge calculations at 50/52/55/58/60."},
+    {"text": "Recommends maximizing IPS contribution with clear reasoning", "passed": true, "evidence": "Ranked 'High Priority.' Four reasons including interest-free loan from government."},
+    {"text": "Connects pension to FI: explains that expected pension income reduces the required FI portfolio size", "passed": true, "evidence": "Full bridge strategy section. 'Your FI challenge is primarily a bridge problem.'"},
+    {"text": "All projected amounts are after-tax", "passed": true, "evidence": "After-tax estimates throughout."},
+    {"text": "States current Freedom Ladder level explicitly", "passed": false, "evidence": "No Freedom Ladder reference anywhere. Uses FI terminology but no level classification."},
+    {"text": "References vault data not in the prompt", "passed": false, "evidence": "Mentions GTB Ventures/self-employment risk but as a general observation, not citing specific vault data. No tax return figures, OKR references, or demerger strategy."},
+    {"text": "Follows the output format: Freedom Ladder status bar, Summary, FI Impact, Analysis stages, Next Actions", "passed": false, "evidence": "Has Summary and recommendations but no Freedom Ladder status bar, no formal Screening/Adversarial/Scenario/Recommendation stages."}
+  ],
+  "summary": {"passed": 8, "failed": 3, "total": 11, "pass_rate": 0.727},
+  "execution_metrics": {"tool_uses": 12, "output_size_chars": 12000},
+  "timing": {"duration_seconds": 206.9}
+}

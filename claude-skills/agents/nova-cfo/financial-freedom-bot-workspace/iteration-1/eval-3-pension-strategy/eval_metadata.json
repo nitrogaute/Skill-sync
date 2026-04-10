@@ -1,0 +1,15 @@
+{
+  "eval_id": 3,
+  "eval_name": "pension-strategy-optimization",
+  "prompt": "What's the optimal pension strategy for me? I'm 35, earning about 1.5M at Kongsberg Maritime, have AFP eligibility through KM, and currently put 15k/year in IPS. How does pension fit into my financial freedom plan? Should I change anything?",
+  "assertions": [
+    "Covers all pension pillars: AFP, OTP, IPS, and folkepensjon",
+    "Explains AFP eligibility rules and notes requirement for 7 of last 9 years in AFP-covered employment before 62",
+    "Notes IPS max increases to 25,000 kr from 2026 with 5,500 kr tax deduction",
+    "Projects OTP accumulation based on typical employer contribution rates",
+    "Models pension income at multiple ages (at least 62, 65, and 67)",
+    "Recommends maximizing IPS contribution with clear reasoning (tax deduction + formuesskatt exemption)",
+    "Connects pension to FI: explains that expected pension income reduces the required FI portfolio size",
+    "All projected amounts are after-tax"
+  ]
+}

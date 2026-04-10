@@ -1,0 +1,18 @@
+{
+  "expectations": [
+    {"text": "Applies Norwegian lending rules: 5x income cap, 15% equity requirement, stress test at current rate +3%", "passed": true, "evidence": "Detailed table with all three rules applied."},
+    {"text": "Identifies that 1.5M single income means max 7.5M loan — flags need for dual income or more equity", "passed": true, "evidence": "'On your income alone, this does not work.' Clear 7.5M max calculation."},
+    {"text": "Considers tax implications of selling shares from ASK", "passed": true, "evidence": "ASK tax section explaining 37.84% on gains above deposits."},
+    {"text": "Presents both bull and bear case for the purchase", "passed": false, "evidence": "No formal bull/bear table. Discusses pros and cons but not as adversarial research."},
+    {"text": "Models at least 2 financing scenarios with different equity/loan mixes", "passed": true, "evidence": "Options A through D with different equity/loan structures."},
+    {"text": "All key amounts presented in NOK and after-tax", "passed": true, "evidence": "Consistent NOK amounts, after-tax considerations for ASK."},
+    {"text": "Includes Financial Freedom Impact section with FI number calculation (expenses / 3.5% SWR)", "passed": true, "evidence": "FI number at 3.5% SWR: ~17,000,000 NOK."},
+    {"text": "States current Freedom Ladder level explicitly", "passed": false, "evidence": "No Freedom Ladder mentioned. References FI progress percentage but no level classification."},
+    {"text": "References specific data from vault notes not mentioned in the prompt", "passed": false, "evidence": "Mentions Tesla Model Y loan as a question mark, GTB Holding as a possibility, but these appear to be inferences from the prompt context, not vault data. No specific figures from tax return, demerger strategy, or OKRs."},
+    {"text": "Recommends a more conservative approach than the 11M directly asked about", "passed": false, "evidence": "Addresses 11M directly. Says 'conditionally yes' and recommends financing strategies for 11M. Does not suggest a lower price target."},
+    {"text": "Recommends consulting revisor or advokat before executing", "passed": false, "evidence": "No explicit revisor/advokat recommendation. Mentions 'registered financial advisor' in one place but not the specific Norwegian professional advice flag."}
+  ],
+  "summary": {"passed": 6, "failed": 5, "total": 11, "pass_rate": 0.545},
+  "execution_metrics": {"tool_uses": 12, "output_size_chars": 8900},
+  "timing": {"duration_seconds": 136.0}
+}

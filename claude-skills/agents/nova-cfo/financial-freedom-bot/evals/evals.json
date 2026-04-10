@@ -1,0 +1,61 @@
+{
+  "skill_name": "financial-freedom-bot",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We're seriously considering buying a house in the Stavanger area, probably around 11M NOK. Combined household income is about 1.5M/year from KM, and we have roughly 1.5M in KOG/KM stocks on ASK. Elsa works too but I'm not sure of her exact salary. Is this realistic? What's the smartest way to finance it, and how does it affect my path to financial freedom?",
+      "expected_output": "Full pipeline analysis of house purchase feasibility. Should apply Norwegian lending rules, consider tax implications, present bull/bear cases, model scenarios, and assess FI impact. Must read vault notes for real financial data.",
+      "files": [],
+      "expectations": [
+        "Applies Norwegian lending rules: 5x income cap, 15% equity requirement, stress test at current rate +3%",
+        "Identifies that 1.5M single income means max 7.5M loan — flags need for dual income or more equity",
+        "Considers tax implications of selling shares from ASK (only taxed on withdrawal above deposits)",
+        "Presents both bull and bear case for the purchase",
+        "Models at least 2 financing scenarios with different equity/loan mixes",
+        "All key amounts presented in NOK and after-tax",
+        "Includes Financial Freedom Impact section with FI number calculation (expenses / 3.5% SWR)",
+        "States current Freedom Ladder level explicitly (e.g., Level 1 Buffer)",
+        "References specific data from vault notes not mentioned in the prompt (e.g., existing debt from tax return, Elsa's income status, demerger timeline)",
+        "Recommends a more conservative approach than the 11M directly asked about (e.g., phased approach, lower price target)",
+        "Recommends consulting revisor or advokat before executing"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "My KOG and KM shares on ASK are worth about 1.5M NOK total and make up roughly 85% of my investment portfolio. I know that's concentrated but I work at KM and believe in the company. Should I diversify? If so, how do I do it tax-efficiently? And what does this concentration risk actually mean for reaching financial freedom?",
+      "expected_output": "Analysis-tier response covering portfolio concentration risk, ASK tax mechanics, diversification strategies, and FI impact. Should read vault notes and use the freedom ladder framework.",
+      "files": [],
+      "expectations": [
+        "Flags 85% concentration as exceeding the 30% single-position threshold",
+        "Explains ASK tax rules: tax-free switching inside ASK, only taxed on withdrawal above total deposits",
+        "Notes the additional risk of having both employment income AND portfolio concentrated in the same company",
+        "Presents bull case (KOG/KM defense/maritime growth) and bear case (sector downturn, layoffs + portfolio loss simultaneously)",
+        "Considers gradual diversification vs immediate rebalancing",
+        "Models FI timeline impact of different portfolio allocations (concentrated vs diversified)",
+        "Conservative bias visible — recommends reducing concentration even if bull case is strong",
+        "States current Freedom Ladder level explicitly",
+        "Calculates a specific FI number using the 3.5% SWR formula",
+        "References specific vault data not in the prompt (e.g., exact share count, demerger date, cost basis, insider trading restrictions)"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "What's the optimal pension strategy for me? I'm 35, earning about 1.5M at Kongsberg Maritime, have AFP eligibility through KM, and currently put 15k/year in IPS. How does pension fit into my financial freedom plan? Should I change anything?",
+      "expected_output": "Analysis covering all pension pillars with projections at different claiming ages and connection to FI number. Should read vault notes and use the freedom ladder framework.",
+      "files": [],
+      "expectations": [
+        "Covers all pension pillars: AFP, OTP, IPS, and folkepensjon",
+        "Explains AFP eligibility rules and notes requirement for 7 of last 9 years in AFP-covered employment before 62",
+        "Notes IPS max increases to 25,000 kr from 2026 with 5,500 kr tax deduction",
+        "Projects OTP accumulation based on typical employer contribution rates",
+        "Models pension income at multiple ages (at least 62, 65, and 67)",
+        "Recommends maximizing IPS contribution with clear reasoning (tax deduction + formuesskatt exemption)",
+        "Connects pension to FI: explains that expected pension income reduces the required FI portfolio size",
+        "All projected amounts are after-tax",
+        "States current Freedom Ladder level explicitly",
+        "References vault data not in the prompt (e.g., GTB Ventures entrepreneurial plans affecting AFP eligibility, current net wealth from tax return)",
+        "Follows the output format: Freedom Ladder status bar, Summary, FI Impact, Analysis stages, Next Actions"
+      ]
+    }
+  ]
+}
