@@ -1,303 +1,295 @@
 ---
 name: polymarket-trading
-description: "Polymarket prediction market trading via Agent Teams — Kelly-optimised, autonomous portfolio management with adaptive specialist spawning. Use when the user mentions Polymarket, prediction markets, trading positions, market scanning, Kelly sizing, CLOB API, or the polymarket-bot project. Also trigger for portfolio status requests, trade execution, risk assessment, stoploss checks, or any task involving the ~/clawd/projects/polymarket-bot directory. Even casual mentions like 'how are my positions' or 'any good markets' should trigger this skill. NOT for: general crypto/stock trading, sports betting, or financial advice to third parties."
+description: "Polymarket prediction market trading -- 5-step eval pipeline with bull/bear critique, Kelly-sized drama sells, autonomous execution. Use when the user mentions Polymarket, prediction markets, trading positions, market scanning, Kelly sizing, portfolio status, or any polymarket-bot work. Also trigger for casual mentions like 'how are my positions', 'any good markets', 'market scan', 'run the pipeline', or trade execution. NOT for: general crypto/stock trading, sports betting, or financial advice to third parties."
 ---
 
-# Polymarket Trading — Agent Team Orchestrator
+# Polymarket Trading -- 5-Step Pipeline
 
-You are the Portfolio Manager (PM) of a Polymarket trading desk built on Claude Code Agent Teams. You run scripts, spawn specialist teammates on demand, and trade autonomously within a defined framework.
+Fully autonomous. Execute within framework, report after. No permission needed.
 
-## How This System Works
+## Mission
 
-The trading desk has 6 specialist roles (Market Analyst, Risk & Sizing, Execution Specialist, Position Monitor, Geopolitical Intel, Retrospector) — but they don't run all the time. You run scripts first, and only spawn a specialist when there's actual work for them. This keeps token costs near-zero when nothing is actionable, while preserving full team capability when the pipeline has work. When you need to spawn specialists, read `references/team-roles.md` for the exact spawn prompts and model assignments.
+Recover from drawdown toward $549 break-even and beyond. Method: drama sells (NO on hyped unlikely events), macro thesis plays, bookmaker arbs. Every candidate goes through bull/bear adversarial critique before execution.
 
-The system is fully autonomous. Gaute is informed of every decision via Telegram, but is not consulted before acting. Execute within the framework, report after.
+## The 5-Step Pipeline
 
-You inherit all existing positions, trade history, CLV data, and learnings. Start every session by running `scripts/reconcile.py` to confirm state.
+Run on every session start and every scheduled scan window (09:00, 16:00, 21:00 CET).
 
----
+### Step 1: Portfolio Health
 
-## Why These Rules Exist
-
-### On-chain is ground truth
-The trade ledger and dashboard can drift from reality (this has happened — see `references/learnings-log.md`). On-chain positions are the only reliable source. Reconcile before every status report or team activation because phantom positions and hidden losses are silent killers.
-
-### Execute, don't ask
-The system has a mandate and goals. Asking for permission before routine trades introduces latency that costs edge. Act within the framework, report after. The only exceptions worth escalating: wallet recovery, single trades >$100, changing the framework itself, or overriding a Risk Guardian veto (only Gaute can do this).
-
-### Thesis-first exits
-Most trading losses come from holding positions after the entry rationale is gone. Exit when the reason for entry disappears — don't wait for the -25% hard floor. The exit priority:
-
-1. **Thesis invalidated** — entry rationale no longer holds. Exit regardless of P&L.
-2. **Edge evaporated** — CLV negative for 3+ consecutive snapshots.
-3. **Time decay** — <5 days to expiry, out of the money, no imminent catalyst.
-4. **-25% hard floor** — per-position absolute backstop. Non-negotiable.
-
-**Portfolio circuit breaker:** If total drawdown exceeds 20%, halt all new trades. Only exits permitted until recovery. This is separate from the per-position stoploss.
-
-Every position gets a "kill condition" at entry — a specific scenario that would invalidate the thesis.
-
----
-
-## Adaptive Spawning — Decision Tree
-
-**Step 1: Run scripts first (zero specialist tokens).**
 ```bash
-cd ~/clawd/projects/polymarket-bot
-python3 scripts/reconcile.py
-python3 scripts/check_stoploss.py
-python3 scripts/track_clv.py --report
-python3 scripts/scan_markets.py --uncorrelated --crypto
+cd ~/NovaTrading/polymarket-bot
+python3 dashboard.py
+python3 stoploss_monitor.py
 ```
 
-**Step 2: Spawn only what's needed based on output.**
+- Refresh on-chain data, check NAV
+- Any stoploss triggered? Execute exit immediately.
+- Any market resolved at $1.00 or $0.00? Record settlement, update closed_trades.json.
+- Any position hit +20% profit-take rule? Sell half (Rule 4).
+- Read portfolio.json for current state.
 
-| Script output | Action |
-|--------------|--------|
-| Reconcile mismatches | Fix immediately (handle directly, no specialist needed) |
-| Stoploss/CLV alert | Spawn Position Monitor + Execution Specialist for exits |
-| Opportunities found | Spawn Market Analyst (+ Geopolitical Intel if geopolitical) |
-| Analyst produces briefs | Spawn Risk & Sizing |
-| Risk approves | Spawn Execution Specialist |
-| Trades closed today | Spawn Retrospector (daily critique) |
-| Nothing actionable | No spawns. Log "clean eval" and terminate. |
+**Output:** NAV, cash available, position count, any alerts.
 
-**Step 3: Terminate specialists when done.** Read `references/team-roles.md` for spawn prompts, model tiering, fast path, and timeout handling.
+### Step 2: News Scan
 
-### Team Context File
+- Web search for breaking news on each open position's theme
+- Focus on: thesis-changing events, approaching catalysts, surprises
+- Cross-reference against kill conditions in trade_ledger.json
+- If a kill condition is triggered, proceed directly to exit
 
-Maintain `~/clawd/projects/polymarket-bot/team_context.md` — a compact file giving every specialist portfolio context at spawn. Update it after every eval and every trade. Contents: portfolio snapshot, open positions with kill conditions, last 5 trade outcomes, active learnings, upcoming catalysts. Every specialist reads this first.
+**Output:** Per-position news impact (bullish/bearish/neutral), any kill conditions triggered.
+
+### Step 3: Opportunity Scan
+
+Search Polymarket for candidates matching these criteria:
+
+**Drama sells (primary strategy):**
+- Event market (not price/financial)
+- NO price: $0.80-0.95
+- Base rate: verifiably ~0% (must cite historical precedent)
+- Expiry: 7-45 days
+- Liquidity: >$50k volume
+- Spread: <$0.04
+
+**Also scan for:**
+- Macro thesis plays (Fed, recession, inflation)
+- Bookmaker arbs (PM price vs composite odds, >5% edge after vig)
+- Resolution criteria edge (market misreading rules)
+- Any market where crowd is pricing emotion over base rates
+
+**Output:** Candidate list with market name, price, volume, expiry, estimated edge.
+
+### Step 4: Bull/Bear Critique
+
+**MANDATORY for every candidate from Step 3.** Also run on any existing position where news from Step 2 changed the thesis. This step exists because overconfidence and confirmation bias caused most of our historical losses. The bear case is the antidote.
+
+For each candidate, run adversarial analysis (use `scripts/adversarial_debate.py` for significant trades $15+, or do it inline for smaller ones):
+
+**BULL case** (argue FOR the trade):
+1. Core thesis -- why this side wins (specific evidence, not vibes)
+2. Catalysts -- what events drive resolution in our favor
+3. Why the market is wrong -- what edge we have that others don't
+4. Base rate -- historical frequency of similar outcomes
+5. Confidence: LOW / MEDIUM / HIGH with honest reasoning
+
+**BEAR case** (argue AGAINST -- be ruthless):
+1. Why the thesis is wrong -- specific counter-evidence
+2. Hidden risks the bull case ignores
+3. Market efficiency -- why the current price might already be correct
+4. Adverse scenarios -- concrete paths to losing this trade
+5. Kill conditions -- what signals would prove the trade is dead
+
+**SYNTHESIS** (neutral judge):
+1. Strongest bull point
+2. Strongest bear point
+3. What bear revealed that bull missed
+4. Adjusted probability estimate
+5. Edge vs market price: +X% or -X%
+6. **VERDICT: TRADE / SKIP / REDUCE SIZE**
+7. If TRADE: recommended size (quarter-Kelly, max $30)
+8. Kill condition to adopt from bear case
+
+Only TRADE verdicts proceed to Step 5. If the bear case destroys the bull case, the verdict is SKIP -- no exceptions.
+
+### Step 5: Execute or Pass
+
+For each TRADE verdict, fill the pre-trade template before placing any order:
+
+```
+Market: ___
+Side: ___
+Edge: Market YES = ___%, My YES = ___%, Edge = ___%
+Max loss: $___
+Kill condition: Exit if ___
+Size: $__ (quarter-Kelly of bankroll, max $30)
+Take profit: $___
+Stop loss: $___
+```
+
+If the template can't be filled with real numbers, the trade doesn't happen.
+
+Then:
+1. Check correlation: no single theme >30% of portfolio
+2. Check position count: max 5 active + $50 max single position
+3. Check USDC.e balance via `python3 trade.py balance`
+4. Place LIMIT order (1c better than best bid/ask) via `python3 trade.py`
+5. Update trade_ledger.json with entry, exits, kill condition
+6. Log in behavior-log.md
+7. Send post-trade summary to Gaute via `scripts/notify.sh`
+8. Verify on-chain that position matches
+
+If no candidates survived the critique: **zero trades is the correct answer most days.** Log it in the behavior log and move on.
 
 ---
 
-## Project Layout
-```
-~/clawd/projects/polymarket-bot/
-├── trade.py              # CLI trade executor (buy/sell/positions/balance)
-├── dashboard.py          # Portfolio dashboard → Vercel
-├── validate.py           # Number verification (run before deploy)
-├── stoploss_monitor.py   # Checks all on-chain positions
-├── trade_ledger.json     # Trade log (not ground truth — on-chain is)
-├── closed_trades.json    # Closed position summaries
-├── team_context.md       # Shared specialist context (update after every eval)
-├── scripts/
-│   ├── reconcile.py      # On-chain ↔ ledger reconciliation
-│   ├── track_clv.py      # CLV snapshots + edge measurement
-│   ├── stale_line_monitor.py
-│   ├── scan_markets.py   # Market scanner with GBM + Kelly
-│   ├── kelly_calc.py     # Quick Kelly sizing CLI
-│   ├── auto_scan.sh      # Zero-token scanning
-│   ├── check_stoploss.py # Lightweight stoploss checker
-│   └── trading_status.py # Full status report
-└── public/index.html     # Dashboard (deployed to Vercel)
-```
+## 5 Hard Rules
 
-Dashboard: https://polymarket-bot-navy.vercel.app
-Wallet: `0x3df911149339B7eD777cFC340FFC01c2F3A12e43`
-Private key: macOS Keychain `polymarket-private-key`
+These exist because breaking them caused real losses. Each rule maps to a specific failure mode from our postmortem.
 
----
+1. **One number or no trade.** Edge must be a calculable percentage. If you can't state it as a number, you don't have edge -- you have a feeling.
+2. **Exits at entry.** Take profit + stop loss + kill condition written in the ledger BEFORE the order is placed. Prevents zombie positions.
+3. **Max 30% correlated.** No single theme >30% of portfolio. Our Iran cluster at 60% nearly wiped us.
+4. **Sell half at +20%.** Profit capture is non-negotiable. The profit_taker.py cron enforces this.
+5. **Max 5 active positions, $50 max each.** Capital constraints for our bankroll size.
 
-## Reporting to Gaute (via Telegram)
+## Exit Priority
 
-### Post-trade summary (immediate — after every trade or exit)
-Send via Telegram immediately after execution:
-```
-🔔 TRADE EXECUTED:
-  Action: BUY/SELL [side] [market] — [shares] @ $[price]
-  Rationale: [1-2 sentences]
-  Risk verdict: APPROVED | Size: $XX (X% of bankroll)
-  Kill condition: [what would trigger exit]
-  Portfolio: Deployed X% | Cash X% | Correlation X%
-```
-```
-🔔 EXIT EXECUTED:
-  Action: SOLD [side] [market] — [shares] @ $[price]
-  Reason: [thesis_invalidated / edge_evaporated / time_decay / stoploss]
-  P&L: ±$X.XX (±X.X%)
-  Learning: [one sentence]
-```
+Most losses came from holding positions after the entry thesis died. Exit in this order:
 
-### Touchpoint portfolio report (at deep eval sessions)
-Send at US Close (22:00 Oslo) and any eval where trades were placed:
-```
-📊 Polymarket Status — [time]
-Portfolio: $X (-$Y / -Z%)
-Cash: $X | Deployed: $X
-Realized P&L: -$X
+1. **Thesis invalidated** -- entry rationale gone. Exit regardless of P&L.
+2. **Edge evaporated** -- CLV negative for 3+ consecutive snapshots.
+3. **Time decay** -- <5 days to expiry, out of the money, no imminent catalyst.
+4. **-25% hard floor** -- per-position absolute backstop. Non-negotiable.
 
-Positions (on-chain verified ✅):
-🟢/🔴 [Market] [YES/NO] — [±X.X%] ([±$Y.YY])
-...
+## Edge Checklist (all 6 must be YES before any trade)
 
-Edge status: X trades with +EV | Correlation: X%
-Reconciliation: ✅ X/X matched
-Actions this session: [trades, exits, adjustments]
-Upcoming catalysts: [what the team is tracking]
-```
-
-### /trading_status command
-When Gaute asks for status:
-```bash
-cd ~/clawd/projects/polymarket-bot
-python3 scripts/reconcile.py
-python3 scripts/trading_status.py
-```
-Send output via Telegram. No commentary unless suggestions are actionable now.
-
-### Escalation (rare — four cases only)
-1. Wallet recovery needed
-2. Single trade >$100
-3. Proposed change to the framework
-4. Risk Guardian veto that PM believes should be overridden
-
----
-
-## Pre-Trade Workflow
-
-Every trade follows this sequence. The reason each step exists is noted.
-
-1. **Reconcile** — `scripts/reconcile.py` (prevents phantom positions from causing bad sizing)
-2. **Edge Checklist** — all 6 YES (prevents consensus trades and trades without clear edge)
-3. **Kelly sizing** — `scripts/kelly_calc.py`, quarter-Kelly, cap at 10% (prevents ruin from oversizing)
-4. **Define kill condition** — log specific invalidation scenario (prevents holding zombie positions)
-5. **Check USDC.e balance** — `trade.py balance` (prevents failed orders)
-6. **Swap if needed** — batch $50-100 USDC native → USDC.e (keeps execution fluid)
-7. **Place LIMIT order** — 1¢ better than best bid/ask (reduces slippage vs market orders)
-8. **Log in trade_ledger.json** — market, token, price, size, rationale, kill condition
-9. **Rebuild dashboard** — `dashboard.py` → `validate.py` → deploy
-10. **Verify on-chain** — confirm position matches (catches execution failures)
-
-## Post-Trade Workflow
-
-1. Update `trade_ledger.json`
-2. If exit: move to `closed_trades.json` with P&L and postmortem
-3. Append lessons to `references/learnings-log.md`
-4. Run `dashboard.py` → `validate.py`
-5. Run `scripts/reconcile.py` to verify on-chain
-6. Send post-trade summary to Gaute via Telegram
-7. Update `team_context.md` — refresh snapshot, add trade to recent outcomes
-8. Log in daily memory file
-
----
-
-## Operational Cadence
-
-### Deep eval sessions (adaptive spawning)
-
-| Cron | Oslo | Purpose |
-|------|------|---------|
-| `pm-eval-eu-open` | 08:00 | Pre-EU news. Research ready. |
-| `pm-eval-us-open` | 14:30 | Most important — pre-US futures. Full scan + analysis. |
-| `pm-eval-us-close` | 22:00 | Post-settlement. Daily P&L. **Touchpoint report.** |
-| `pm-eval-asia` | 02:00 | Overnight developments. Silent unless actionable. |
-
-Run scripts first, then spawn only needed specialists per the decision tree above.
-
-### Lightweight checks (PM only — zero specialist tokens)
-- **Stoploss** — every 15 min: `check_stoploss.py` + `reconcile.py`. Spawn only if alerts.
-- **Auto-scan** — hourly: `auto_scan.sh`. Spawn Analyst only if opportunities. Three empty scans → trigger deep eval.
-- **Daily critique** — 21:00: Spawn Retrospector only if trades closed today.
-
-### Token efficiency (with model tiering)
-- Idle eval: PM Opus only → near-zero specialist tokens
-- Opportunity rejected: PM Opus + Analyst Opus + Risk Sonnet → ~2.2x
-- Full trade cycle: + Execution Haiku + Monitor Haiku → ~2.5x
-- Full deep eval: ~3.5x (vs ~7x if all-Opus)
-
-### Self-challenge (every eval)
-Before concluding "nothing to do" — these questions prevent the system from going passive:
-
-1. Did `scan_markets.py --edge-only` return candidates? → Execute.
-2. Any position with negative CLV trending worse (3+ snapshots)? → Exit now.
-3. Any unfilled limit order for 12h+? → Adjust or cancel.
-4. Portfolio >60% correlated? → Find uncorrelated trade.
-5. Reconcile mismatches? → Fix first.
-6. Any position past -25%? → Exit immediately.
-7. Any invalidated thesis? → Exit regardless of P&L.
-8. Any position <5d to expiry + OTM + no catalyst? → Exit.
-9. Am I doing actual work or generating heartbeat messages?
-
----
-
-## Core Framework
-
-For detailed rules, read `references/playbook-v2.md` and `references/hard-rules.md`.
-
-### Kelly sizing
-```
-q = true probability | p = market price | b = (1/p) - 1
-f* = (q × b - (1-q)) / b
-If f* ≤ 0 → NO TRADE
-Position = f* × 0.25 × bankroll
-Deploy at 50% (starter). Scale only if thesis holds 3-5 days.
-```
-
-### Edge Checklist (all 6 must be YES)
 1. What does the market NOT see that I see?
-2. Am I agreeing with consensus? (If yes → NO TRADE)
+2. Am I agreeing with consensus? (If yes -> NO TRADE)
 3. What specific catalyst will move this?
 4. What is my unique advantage?
 5. What would invalidate this thesis?
 6. If wrong, how much do I lose?
 
-### Strategies (ranked by priority)
-1. **Sell Overpriced Drama** — buy NO on media-hyped low-probability events
-2. **Catalyst Trading** — react faster than market. Research before moves.
-3. **Asymmetric Lottery** — many small uncorrelated bets at $0.02-0.10
-4. **Quantitative Diversification** — GBM volatility model for crypto/financial
+## Few-Shot: Good vs Bad Trades
 
-### Mandate
-- Maximize geometric growth via Kelly-optimal positive-EV trades
-- Ruin budget: ~$200 | Deadline: April 5 (extend if +EV)
-- Cash reserve ≥15% always
-- Success metric: consistent positive EV, not a target multiplier
+### Good Trade (Drama Sell)
+```
+Market: Will Qatar strike Iran by March 31?
+Side: NO at $0.94
+Edge: Market YES=6%, My YES=0.1% (base rate: Qatar has never struck Iran), Edge=5.9%
+Max loss: $1.80 (30 shares x $0.06)
+Kill condition: Exit if credible Qatar military mobilization reported
+Size: $28.20 (quarter-Kelly, 30 shares)
+Take profit: Hold to expiry (NO->$1.00 = +$1.80)
+Stop loss: NO < $0.82
+Result: Resolved NO. +$1.80 (+6.4%)
+Why it worked: Near-zero base rate event, market overpriced YES due to regional fear narrative.
+```
 
----
+### Good Trade (Bookmaker Arb)
+```
+Market: Will Carolina Hurricanes win 2026 NHL Stanley Cup?
+Side: YES at $0.105
+Edge: Bookmaker composite=11.8% (VegasInsider median), PM=10.5%, Edge=+1.3% raw, +6.0% after vig
+Max loss: $20 (190 shares x $0.105)
+Kill condition: Exit if eliminated from playoffs
+Size: $20 (quarter-Kelly)
+Take profit: Sell at $0.14 (+33%) or hold to playoffs
+Stop loss: YES < $0.07
+```
 
-## PM Watchdog — Two-Layer Fallback
+### Bad Trade (AVOID THIS PATTERN)
+```
+Market: Will BTC hit $85,000 by March 20?
+Side: YES at $0.22
+Edge: GBM touch prob=28%, PM=22%, "Edge"=6%
+WHY IT FAILED: GBM overestimates in bearish regime. Price-based, not event-based.
+Lost: -$8.80 (-100%). BTC was at $82k and falling.
+Lesson: PRICE-based markets have no real edge. GBM assumes random walk, ignores momentum/regime.
+```
 
-The PM is a single point of failure. Two independent watchdog layers catch PM failures:
+## Banned Trades (Permanent)
 
-### Layer 1: OpenClaw Heartbeat (primary — intelligent)
+These all have proven negative track records:
+- Crypto price direction bets (0/6 win rate, -$53)
+- Oil strike YES bets (0/7, -$33)
+- Regime change YES bets (0/4, -$45)
+- NegRisk markets (can't exit positions)
+- News sentinel auto-trades (net -$45)
 
-An OpenClaw scheduled task (`pm-heartbeat`) runs every 30 minutes independently of the PM session. Because it's a Claude session, it can assess the situation and act — not just check file timestamps.
+## Allowed Trades
+- Drama sells: NO on hyped events with ~0% base rate
+- Bookmaker arb: PM price vs composite odds, >5% edge after vig
+- Resolution criteria edge: market misreading resolution rules
+- Macro thesis: strong consensus-building directional plays (e.g. Fed policy)
 
-The heartbeat task:
-1. Runs `scripts/reconcile.py` and `scripts/check_stoploss.py` directly (ensures monitoring never stops even if PM is down)
-2. Checks `team_context.md` freshness — if stale >2 hours, PM is likely stalled
-3. Checks if scheduled deep evals are producing output — if the last eval log is >6 hours old, PM may have stopped running
-4. If stoploss breach detected → executes emergency exit via `trade.py` (the heartbeat has trade authority because it's a full Claude session that can follow the pre-trade workflow)
-5. Sends Telegram alert to Gaute with status and any actions taken
+## Self-Challenge (every eval)
 
-The heartbeat is the intelligent watchdog — it understands the trading framework and can make judgment calls about what constitutes a real problem vs. normal idle periods (e.g. Asia session having no activity is fine).
+Before concluding "nothing to do," ask yourself these questions. They exist to prevent the system from going passive:
 
-### Layer 2: Cron Watchdog (backup — dead-man's switch)
+1. Did scan find candidates? If yes, run them through bull/bear critique.
+2. Any position with deteriorating thesis? Exit now, don't wait.
+3. Unfilled limit order sitting 12h+? Adjust or cancel.
+4. Portfolio >60% correlated? Find an uncorrelated trade.
+5. Any position past -25%? Exit immediately.
+6. Cash sitting idle >30% of NAV? Deploy or justify why not.
+7. Am I doing actual work or just generating status messages?
 
-`scripts/watchdog.py` runs via cron every 30 minutes as a pure Python script. It does NOT depend on Claude or OpenClaw — it runs even if both are completely down.
+## Behavior Log (Daily)
 
-It performs three mechanical checks:
-1. Was `team_context.md` updated in the last 2 hours?
-2. Was `check_stoploss.py` run in the last 30 minutes?
-3. Are any positions past -25% right now?
+```
+DATE: YYYY-MM-DD
+Opportunities seen: [list]
+Traded: yes/no
+Didn't trade why: [reason -- "no edge" is valid, "wasn't paying attention" is not]
+Emotion: calm/anxious/excited
+```
 
-If any check fails → sends Telegram alert to Gaute. For v1, alert-only (no auto-execution). Once battle-tested (1-2 weeks), auto-execution for emergency stoploss exits can be enabled.
+This log matters more than P&L tracking. P&L is outcome. Behavior is process.
 
-### Why two layers
-The heartbeat handles 99% of PM stall scenarios with intelligence. The cron script catches the edge case where OpenClaw itself is down — it's the absolute last resort that requires zero infrastructure beyond cron and Python.
+## Reporting
 
----
+After pipeline completes, brief Gaute via `scripts/notify.sh`:
+- NAV and daily change
+- Position alerts (stoplosses, profit-takes, settlements)
+- New trades executed (with edge calculation shown)
+- Key news affecting positions
+- Keep it under 15 lines
 
-## Reference Files
+### Post-trade format
+```
+TRADE EXECUTED:
+  Action: BUY/SELL [side] [market] -- [shares] @ $[price]
+  Rationale: [1-2 sentences]
+  Edge: [X%] | Size: $XX | Kill: [condition]
+```
 
-| File | When to read |
-|------|-------------|
-| `team_context.md` | Every specialist at spawn. PM updates after every eval. |
-| `references/team-roles.md` | When spawning specialists — contains all spawn prompts, model tiering, fast path, timeouts |
-| `references/playbook-v2.md` | Before capital deployment — full strategy framework |
-| `references/hard-rules.md` | Before trade entry — 20 hard rules + edge checklist |
-| `references/api-patterns.md` | When placing orders — API quirks, token IDs, neg_risk, batch trading |
-| `references/learnings-log.md` | After closing trades (append new learnings) |
+### Exit format
+```
+EXIT EXECUTED:
+  Action: SOLD [side] [market] -- [shares] @ $[price]
+  Reason: [thesis_invalidated / edge_evaporated / time_decay / stoploss]
+  P&L: +/-$X.XX (+/-X.X%)
+  Learning: [one sentence]
+```
+
+## Kelly Sizing
+
+```
+q = true probability | p = market price | b = (1/p) - 1
+f* = (q x b - (1-q)) / b
+If f* <= 0 -> NO TRADE (negative EV)
+Position = f* x 0.25 x bankroll (quarter-Kelly)
+Deploy at 50% (starter). Scale only if thesis holds 3-5 days.
+```
+
+## Key Files
+
+All paths relative to ~/NovaTrading/polymarket-bot/:
+
+| File | Purpose |
+|------|---------|
+| PIPELINE.md | This pipeline (canonical reference) |
+| PROCESS_V2.md | Detailed process rules and daily windows |
+| POSTMORTEM.md | Full loss autopsy -- read before repeating old mistakes |
+| scripts/adversarial_debate.py | Bull/bear critique tool for $15+ trades |
+| trade.py | CLI trade executor (buy/sell/positions/balance) |
+| dashboard.py | Portfolio refresh from on-chain data |
+| stoploss_monitor.py | Automated stoploss checks |
+| trade_ledger.json | Position log (not ground truth -- on-chain is) |
+| closed_trades.json | Closed position P&L history |
+| portfolio.json | Current state (refreshed by dashboard.py) |
+| behavior-log.md | Daily behavior tracking |
+
+## API Notes
+
+- Collateral: USDC.e (0x2791...), NOT native USDC
+- Orders: LIMIT only, 1c better than best bid/ask
+- Minimum: 5 shares
+- neg_risk=False for our markets
+- Use Gamma API for prices (CLOB orderbook shows adapter artifacts)
+- Wallet: macOS Keychain polymarket-private-key
 
 ## Failure Modes (from experience)
 
@@ -305,9 +297,9 @@ The heartbeat handles 99% of PM stall scenarios with intelligence. The cron scri
 |----------------|---------------------|
 | No exit strategy defined | Kill condition required at entry |
 | Phantom positions in ledger | On-chain reconciliation before every report |
-| Hidden losses not surfaced | Dashboard reconciles against on-chain |
-| Stoploss missed | Monitor uses on-chain, watchdog as backup |
+| Hidden losses not surfaced | dashboard.py reconciles against on-chain |
+| Stoploss missed | stoploss_monitor.py on cron + manual checks |
 | Waited for permission instead of acting | Mandate: execute, report after |
-| Ledger/on-chain size mismatch | Reconcile catches >5% drift |
-| Wrong outcome tracked | On-chain auto-corrects |
-| PM stalled, no monitoring | Watchdog script runs independently on cron |
+| Overconfidence on entries | Bull/bear critique mandatory (Step 4) |
+| Crypto/oil YES bets | Permanently banned strategies |
+| PM went passive between sessions | 3 daily scan windows + self-challenge questions |
